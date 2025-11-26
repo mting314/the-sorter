@@ -5,7 +5,6 @@
 
 import { useTranslation } from 'react-i18next';
 import { useState, useCallback, useMemo } from 'react';
-import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core';
 import {
   MeasuringStrategy,
   closestCenter,
@@ -15,7 +14,12 @@ import {
   useSensor,
   PointerSensor,
   TouchSensor,
-  KeyboardSensor
+  KeyboardSensor,
+  defaultDropAnimationSideEffects,
+  type DragStartEvent,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DropAnimation
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import { BiPlus } from 'react-icons/bi';
@@ -394,7 +398,7 @@ export function PredictionBuilder({
         }
       }
     },
-    [prediction.setlist.items, _addSong, reorderItems]
+    [prediction.setlist.items, _addSong, reorderItems, addNonSongItem]
   );
 
   const handleSave = () => {
@@ -464,10 +468,24 @@ export function PredictionBuilder({
     () => ({
       droppable: {
         strategy: MeasuringStrategy.WhileDragging
+      },
+      draggable: {
+        measure: (element: HTMLElement) => element.getBoundingClientRect()
       }
     }),
     []
   );
+
+  // Drop animation configuration for smooth transitions
+  const dropAnimation: DropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: '0.5'
+        }
+      }
+    })
+  };
 
   return (
     <DndContext
@@ -786,7 +804,9 @@ export function PredictionBuilder({
       </Stack>
 
       {/* Drag Overlay - provides visual feedback during drag */}
-      <DragOverlay>{activeId ? <DragPreview activeData={activeData} /> : null}</DragOverlay>
+      <DragOverlay dropAnimation={dropAnimation}>
+        {activeId ? <DragPreview activeData={activeData} /> : null}
+      </DragOverlay>
 
       <AddItemDrawer
         isOpen={addItemDrawerOpen}
