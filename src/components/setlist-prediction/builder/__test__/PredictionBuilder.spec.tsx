@@ -231,7 +231,7 @@ describe('PredictionBuilder - Drag and Drop', () => {
         />
       );
 
-      const nameInput = screen.getByDisplayValue('Test Prediction') as HTMLInputElement;
+      const nameInput = screen.getByDisplayValue('Test Prediction');
       await user.clear(nameInput);
       await user.type(nameInput, 'My New Prediction');
 
