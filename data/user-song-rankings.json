@@ -1,0 +1,102 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-31T00:00:00Z",
+  "users": [
+    {
+      "id": "user_alice",
+      "userName": "Alice",
+      "profilePicture": "/assets/avatars/default-avatar.png",
+      "rankings": {
+        "ceriseBouquet": [
+          ["504"],
+          ["541", "542"],
+          ["543"],
+          ["548", "552"],
+          ["574"],
+          ["579"]
+        ],
+        "dollchestra": [
+          ["505"],
+          ["544"],
+          ["545", "546"],
+          ["547"],
+          ["553"]
+        ]
+      }
+    },
+    {
+      "id": "user_bob",
+      "userName": "Bob",
+      "profilePicture": "/assets/avatars/default-avatar.png",
+      "rankings": {
+        "ceriseBouquet": [
+          ["543"],
+          ["504"],
+          ["541"],
+          ["542"],
+          ["548"],
+          ["552"],
+          ["574"]
+        ],
+        "dollchestra": [
+          ["544"],
+          ["505", "545"],
+          ["546"],
+          ["547"]
+        ],
+        "miracraPark": [
+          ["506"],
+          ["555"],
+          ["589"],
+          ["613"]
+        ]
+      }
+    },
+    {
+      "id": "user_carol",
+      "userName": "Carol",
+      "profilePicture": "/assets/avatars/default-avatar.png",
+      "rankings": {
+        "ceriseBouquet": [
+          ["542"],
+          ["541"],
+          ["504"],
+          ["543"],
+          ["579", "574"]
+        ],
+        "groupSongs": [
+          ["632"],
+          ["715"],
+          ["720"]
+        ],
+        "edelNote": [
+          ["719"],
+          ["756"],
+          ["757", "758"],
+          ["782"]
+        ]
+      }
+    },
+    {
+      "id": "user_dave",
+      "userName": "Dave",
+      "profilePicture": "/assets/avatars/default-avatar.png",
+      "rankings": {
+        "miracraPark": [
+          ["618"],
+          ["623"],
+          ["506"],
+          ["555", "589"],
+          ["613"]
+        ],
+        "edelNote": [
+          ["756"],
+          ["719"],
+          ["757"],
+          ["758"],
+          ["782", "811"]
+        ]
+      }
+    }
+  ]
+}
