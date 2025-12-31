@@ -16,7 +16,8 @@
     "characters": "Characters",
     "hasu-music": "Hasunosora",
     "songs": "Songs",
-    "setlist-prediction": "Setlist Prediction"
+    "setlist-prediction": "Setlist Prediction",
+    "song-rankings": "Song Rankings"
   },
   "settings": {
     "sort_count": "{{ count }} to be sorted",
@@ -201,6 +202,16 @@
     "no_selection": "No items selected",
     "moveUp": "Move up",
     "moveDown": "Move down"
+  },
+  "song_rankings": {
+    "title": "Song Rankings Comparison",
+    "select_group": "Select a Group",
+    "description": "Compare and rank user song rankings",
+    "songs_count": "{{count}} songs",
+    "rankings_count": "{{count}} user rankings",
+    "start_sorting": "Start Comparing",
+    "comparison_count": "Comparison {{current}} of {{total}}",
+    "your_result": "Your Ranking of User Rankings"
   },
   "setlistPrediction": {
     "title": "Setlist Prediction",

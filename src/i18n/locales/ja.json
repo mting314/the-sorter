@@ -14,7 +14,8 @@
     "characters": "キャラ",
     "hasu-music": "蓮ノ空",
     "songs": "楽曲",
-    "setlist-prediction": "セトリ予想"
+    "setlist-prediction": "セトリ予想",
+    "song-rankings": "ランキング比較"
   },
   "settings": {
     "sort_count": "{{ count }}人をランキングする",
@@ -190,6 +191,16 @@
     "error": "エラー",
     "edit": "編集",
     "confirmDelete": "本当によろしいですか？"
+  },
+  "song_rankings": {
+    "title": "楽曲ランキング比較",
+    "select_group": "グループを選択",
+    "description": "ユーザーの楽曲ランキングを比較してランク付け",
+    "songs_count": "{{count}}曲",
+    "rankings_count": "{{count}}人のランキング",
+    "start_sorting": "比較を開始",
+    "comparison_count": "第{{current}}回目 / {{total}}",
+    "your_result": "あなたのランキング結果"
   },
   "setlistPrediction": {
     "title": "セットリスト予想",
