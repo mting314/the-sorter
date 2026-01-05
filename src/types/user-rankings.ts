@@ -4,7 +4,7 @@ export interface UserRanking {
   id: string;
   userName: string;
   profilePicture: string;
-  rankings: Partial<Record<GroupKey, string[][]>>;
+  rankings: Partial<Record<GroupKey, string[]>>;
 }
 
 export interface UserRankingsData {
@@ -15,5 +15,5 @@ export interface UserRankingsData {
 
 export interface UserRankingWithGroup extends UserRanking {
   currentGroup: GroupKey;
-  currentRanking: string[][];
+  currentRanking: string[];
 }

@@ -1,30 +1,69 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { join } from 'path-browserify';
-import { Stack, HStack, Grid, Box } from 'styled-system/jsx';
-import { Text } from '~/components/ui/text';
-import { Button } from '~/components/ui/button';
-import { Progress } from '~/components/ui/progress';
+import { Button } from '../../../components//ui/button';
+import { Kbd } from '../../../components//ui/kbd';
+import { Progress } from '../../../components//ui/progress';
+import { Switch } from '../../../components//ui/switch';
+import { Text } from '../../../components//ui/text';
+import type { Character } from '../../../types';
+import { getCurrentItem } from '../../../utils/sort';
 import { Metadata } from '~/components/layout/Metadata';
-import { getCurrentItem } from '~/utils/sort';
+import { Box, HStack, Stack, Wrap } from 'styled-system/jsx';
 import { useUserRankingsSortData } from '~/hooks/useUserRankingsSortData';
-import { UserRankingCard } from '~/components/song-rankings/UserRankingCard';
-import { useSongData } from '~/hooks/useSongData';
-import { useArtistsData } from '~/hooks/useArtistsData';
-import { GROUP_NAMES } from '~/constants/groups';
-import type { GroupKey } from '~/types/user-rankings';
-import { Kbd } from '~/components/ui/kbd';
+import { UserRankingCard } from '~/components/sorter/UserRankingCard';
+import { useUserRankingsData } from '~/hooks/useUserRankingsData';
 
-export function Page({ routeParams }: { routeParams: { group: string } }) {
-  const group = routeParams.group as GroupKey;
-  const { t } = useTranslation();
-  const songs = useSongData();
-  const artists = useArtistsData();
+const RankingResultsView = lazy(() =>
+  import('../../../components//results/rankings/RankingResultsView').then((m) => ({
+    default: m.RankingResultsView
+  }))
+);
 
+const ConfirmMidSortDialog = lazy(() =>
+  import('../../../components//dialog/ConfirmDialog').then((m) => ({
+    default: m.ConfirmMidSortDialog
+  }))
+);
+
+const ConfirmEndedDialog = lazy(() =>
+  import('../../../components//dialog/ConfirmDialog').then((m) => ({
+    default: m.ConfirmEndedDialog
+  }))
+);
+
+const ConfirmNewSessionDialog = lazy(() =>
+  import('../../../components//dialog/ConfirmDialog').then((m) => ({
+    default: m.ConfirmNewSessionDialog
+  }))
+);
+
+const CharacterInfoDialog = lazy(() =>
+  import('../../../components//dialog/CharacterInfoDialog').then((m) => ({
+    default: m.CharacterInfoDialog
+  }))
+);
+
+const CharacterFilters = lazy(() =>
+  import('../../../components//sorter/CharacterFilters').then((m) => ({
+    default: m.CharacterFilters
+  }))
+);
+
+const SortingPreviewDialog = lazy(() =>
+  import('../../../components//sorter/SortingPreviewDialog').then((m) => ({
+    default: m.SortingPreviewDialog
+  }))
+);
+
+export function Page() {
+  const allRankings = useUserRankingsData();
+  const { t, i18n } = useTranslation();
   const {
+    noTieMode,
+    setNoTieMode,
     init,
-    left: chooseLeft,
-    right: chooseRight,
+    left,
+    right,
     state,
     count,
     tie,
@@ -33,251 +72,260 @@ export function Page({ routeParams }: { routeParams: { group: string } }) {
     isEnded,
     listToSort,
     listCount,
-    clear,
-  } = useUserRankingsSortData(group);
+    clear
+  } = useUserRankingsSortData('ceriseBouquet'); // TODO: get group from URL
+  const [showConfirmDialog, setShowConfirmDialog] = useState<{
+    type: 'mid-sort' | 'ended' | 'new-session' | 'preview';
+    action: 'reset' | 'clear';
+  }>();
 
-  const [isStarted, setIsStarted] = useState(false);
+  const { left: leftItem, right: rightItem } =
+    (state && getCurrentItem(state)) || ({} as { left: string[]; right: string[] });
 
-  // Get group name
-  const groupName = GROUP_NAMES[group];
+  const currentLeft = leftItem && listToSort.find((l) => l.id === leftItem[0]);
+  const currentRight = rightItem && listToSort.find((l) => l.id === rightItem[0]);
 
-  // Get current items to compare
-  const { left, right } = useMemo(() => {
-    if (!state || !listToSort.length) {
-      return { left: null, right: null };
-    }
+  // const titlePrefix = getFilterTitle(filters, data, i18n.language) ?? t('defaultTitlePrefix');
+  const title = t('title');
 
-    const current = getCurrentItem(state);
-    if (!current) {
-      return { left: null, right: null };
-    }
+  const isSorting = !!state;
 
-    const leftUser = listToSort.find((u) => u.id === current.left);
-    const rightUser = listToSort.find((u) => u.id === current.right);
-
-    return { left: leftUser || null, right: rightUser || null };
-  }, [state, listToSort]);
-
-  // Handle keyboard shortcuts
-  useEffect(() => {
-    if (!isStarted || isEnded) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        chooseLeft();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        chooseRight();
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        tie();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        undo();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isStarted, isEnded, chooseLeft, chooseRight, tie, undo]);
-
-  // Handle start sorting
   const handleStart = () => {
-    init();
-    setIsStarted(true);
+    if (isSorting) {
+      setShowConfirmDialog({
+        type: state.status === 'end' ? 'ended' : 'mid-sort',
+        action: 'reset'
+      });
+    } else {
+      init();
+    }
   };
 
-  // Handle restart
-  const handleRestart = () => {
-    clear();
-    setIsStarted(false);
+  const handleClear = () => {
+    if (isSorting) {
+      setShowConfirmDialog({
+        type: state.status === 'end' ? 'ended' : 'mid-sort',
+        action: 'clear'
+      });
+    } else {
+      clear();
+    }
   };
 
-  // Not enough rankings to compare
-  if (listCount < 2) {
-    return (
-      <>
-        <Metadata title={`${groupName} - ${t('song_rankings.title')}`} helmet />
-        <Stack alignItems="center" w="full" gap={6} p={{ base: 4, md: 6 }}>
-          <Text fontSize="2xl" fontWeight="bold">
-            {groupName}
-          </Text>
-          <Text color="fg.muted">
-            Not enough user rankings available for this group. Need at least 2 rankings to compare.
-          </Text>
-          <Button asChild>
-            <a href={join(import.meta.env.BASE_URL, '/song-rankings')}>
-              Back to Group Selection
-            </a>
-          </Button>
-        </Stack>
-      </>
-    );
-  }
-
-  // Before starting
-  if (!isStarted || !state) {
-    return (
-      <>
-        <Metadata title={`${groupName} - ${t('song_rankings.title')}`} helmet />
-        <Stack alignItems="center" w="full" gap={6} p={{ base: 4, md: 6 }}>
-          <Stack alignItems="center" gap={2}>
-            <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight="bold">
-              {groupName}
-            </Text>
-            <Text color="fg.muted">
-              {t('song_rankings.rankings_count', { count: listCount })}
-            </Text>
-          </Stack>
-
-          <Button size="lg" onClick={handleStart}>
-            {t('song_rankings.start_sorting')}
-          </Button>
-
-          <Button variant="ghost" asChild>
-            <a href={join(import.meta.env.BASE_URL, '/song-rankings')}>
-              Back to Group Selection
-            </a>
-          </Button>
-        </Stack>
-      </>
-    );
-  }
-
-  // Results view (when complete)
-  if (isEnded) {
-    return (
-      <>
-        <Metadata title={`${groupName} - ${t('song_rankings.title')}`} helmet />
-        <Stack alignItems="center" w="full" gap={6} p={{ base: 4, md: 6 }}>
-          <Text fontSize="2xl" fontWeight="bold">
-            {groupName} - {t('song_rankings.your_result')}
-          </Text>
-
-          <Stack gap={4} w="full" maxW="800px">
-            {state.arr.map((tier, tierIdx) => {
-              const rank =
-                state.arr.slice(0, tierIdx).reduce((sum, t) => sum + t.length, 0) + 1;
-
-              return tier.map((userId) => {
-                const user = listToSort.find((u) => u.id === userId);
-                if (!user) return null;
-
-                return (
-                  <HStack key={userId} gap={4}>
-                    <Text fontSize="xl" fontWeight="bold" minW="12">
-                      #{rank}
-                    </Text>
-                    <UserRankingCard
-                      user={user}
-                      ranking={user.currentRanking}
-                      songs={songs}
-                      artists={artists}
-                      flex={1}
-                    />
-                  </HStack>
-                );
-              });
-            })}
-          </Stack>
-
-          <HStack gap={4}>
-            <Button onClick={handleRestart}>Start Over</Button>
-            <Button variant="outline" asChild>
-              <a href={join(import.meta.env.BASE_URL, '/song-rankings')}>
-                Back to Group Selection
-              </a>
-            </Button>
-          </HStack>
-        </Stack>
-      </>
-    );
-  }
-
-  // Sorting interface
   return (
     <>
-      <Metadata title={`${groupName} - ${t('song_rankings.title')}`} helmet />
-      <Stack alignItems="center" w="full" gap={6} p={{ base: 4, md: 6 }}>
-        {/* Header with progress */}
-        <Stack alignItems="center" gap={3} w="full" maxW="1200px">
-          <Text fontSize="xl" fontWeight="bold">
-            {groupName}
-          </Text>
-
-          <Stack w="full" gap={1}>
-            <HStack justifyContent="space-between">
-              <Text fontSize="sm" color="fg.muted">
-                {t('song_rankings.comparison_count', { current: count + 1, total: '?' })}
-              </Text>
-              <Text fontSize="sm" color="fg.muted">
-                {Math.round(progress * 100)}%
-              </Text>
-            </HStack>
-            <Progress value={progress * 100} />
-          </Stack>
-        </Stack>
-
-        {/* Comparison Cards */}
-        {left && right && (
-          <Grid
-            columns={{ base: 1, md: 2 }}
-            gap={4}
-            w="full"
-            maxW="1200px"
-          >
-            <UserRankingCard
-              user={left}
-              ranking={left.currentRanking}
-              songs={songs}
-              artists={artists}
-              position="left"
-            />
-
-            <UserRankingCard
-              user={right}
-              ranking={right.currentRanking}
-              songs={songs}
-              artists={artists}
-              showDiffs
-              diffRanking={left.currentRanking}
-              position="right"
-            />
-          </Grid>
+      <Metadata title={title} helmet />
+      <Stack alignItems="center" w="full">
+        <Text fontSize="3xl" fontWeight="bold" textAlign="center">
+          {title}
+        </Text>
+        <Text textAlign="center">{t('description')}</Text>
+        {!isSorting && (
+          <>
+            {/* <Suspense fallback={<LoadingCharacterFilters />}>
+              {import.meta.env.SSR ? (
+                <LoadingCharacterFilters />
+              ) : (
+                <CharacterFilters filters={filters} setFilters={setFilters} />
+              )}
+            </Suspense> */}
+            <Wrap>
+              <Switch
+                checked={noTieMode}
+                disabled={isSorting}
+                onCheckedChange={(e) => setNoTieMode(e.checked)}
+              >
+                {t('settings.no_tie_mode')}
+              </Switch>
+            </Wrap>
+          </>
         )}
-
-        {/* Action Buttons */}
-        <HStack gap={4} flexWrap="wrap" justifyContent="center">
-          <Button onClick={chooseLeft} size="lg" colorPalette="blue">
-            <HStack>
-              <Kbd>←</Kbd>
-              <Text>Pick Left</Text>
-            </HStack>
+        <Text fontSize="sm" fontWeight="bold">
+          {t('settings.sort_count', { count: listCount })}
+        </Text>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={listCount === 0}
+          onClick={() => setShowConfirmDialog({ type: 'preview', action: 'reset' })}
+        >
+          {t('sort.preview')}
+        </Button>
+        <Wrap justifyContent="center">
+          <Button variant="solid" onClick={() => handleStart()}>
+            {!isSorting ? t('sort.start') : t('sort.start_over')}
           </Button>
+          {isSorting && (
+            <Button variant="subtle" onClick={() => handleClear()}>
+              {state?.status !== 'end' ? t('sort.stop') : t('sort.new_settings')}
+            </Button>
+          )}
+        </Wrap>
 
-          <Button onClick={chooseRight} size="lg" colorPalette="blue">
-            <HStack>
-              <Text>Pick Right</Text>
-              <Kbd>→</Kbd>
-            </HStack>
-          </Button>
-
-          <Button onClick={tie} variant="outline">
-            <HStack>
-              <Kbd>↓</Kbd>
-              <Text>Tie</Text>
-            </HStack>
-          </Button>
-
-          <Button onClick={undo} variant="ghost">
-            <HStack>
-              <Kbd>↑</Kbd>
-              <Text>Undo</Text>
-            </HStack>
-          </Button>
-        </HStack>
+        {/* While we're in sorting state: display left and right cards */}
+        {state && (
+          <Stack alignItems="center" w="full">
+            {state.status !== 'end' && (
+              <Stack w="full" h={{ base: '100vh', md: 'auto' }} p="4">
+                <Stack flex="1" alignItems="center" w="full">
+                  {currentLeft && currentRight && (
+                    <HStack
+                      flex={1}
+                      flexDirection={{ base: 'column', sm: 'row' }}
+                      justifyContent="stretch"
+                      alignItems="stretch"
+                      width="full"
+                    >
+                      <Stack flex="1" alignItems="center" w="full">
+                        <UserRankingCard
+                          onClick={() => left()}
+                          ranking={currentLeft}
+                          groupKey={'ceriseBouquet'}
+                          flex={1}
+                        />
+                        <Box hideBelow="sm">
+                          <Kbd>←</Kbd>
+                        </Box>
+                      </Stack>
+                      <Stack flex="1" alignItems="center" w="full">
+                        <UserRankingCard
+                          onClick={() => right()}
+                          ranking={currentRight}
+                          groupKey={'ceriseBouquet'}
+                          flex={1}
+                        />
+                        <Box hideBelow="sm">
+                          <Kbd>→</Kbd>
+                        </Box>
+                      </Stack>
+                    </HStack>
+                  )}
+                  <HStack justifyContent="center" w="full">
+                    <Button
+                      size={{ base: '2xl', md: 'lg' }}
+                      onClick={() => tie()}
+                      disabled={noTieMode}
+                      flex={{ base: 1, md: 'unset' }}
+                    >
+                      {t('sort.tie')}
+                    </Button>
+                    <Button
+                      size={{ base: '2xl', md: 'lg' }}
+                      variant="subtle"
+                      onClick={() => undo()}
+                      flex={{ base: 1, md: 'unset' }}
+                    >
+                      {t('sort.undo')}
+                    </Button>
+                  </HStack>
+                  <Stack hideBelow="sm" gap="1">
+                    <Text fontWeight="bold">{t('sort.keyboard_shortcuts')}</Text>
+                    <Wrap>
+                      <Text>
+                        <Kbd>←</Kbd>: {t('sort.pick_left')}
+                      </Text>
+                      <Text>
+                        <Kbd>→</Kbd>: {t('sort.pick_right')}
+                      </Text>
+                      <Text
+                        data-disabled={noTieMode === true || undefined}
+                        textDecoration={{ _disabled: 'line-through' }}
+                      >
+                        <Kbd>↓</Kbd>: {t('sort.tie')}
+                      </Text>
+                      <Text>
+                        <Kbd>↑</Kbd>: {t('sort.undo')}
+                      </Text>
+                    </Wrap>
+                  </Stack>
+                </Stack>
+                <Text>{t('sort.comparison_no', { count })}</Text>
+                <Progress
+                  translations={{ value: (details) => `${details.percent}%` }}
+                  value={progress}
+                  min={0}
+                  max={1}
+                  defaultValue={0}
+                />
+              </Stack>
+            )}
+            {state.arr && isEnded && (
+              <Suspense>
+                <RankingResultsView userRankingData={[]} order={state.arr} />
+              </Suspense>
+            )}
+          </Stack>
+        )}
       </Stack>
+      <Suspense>
+        <ConfirmEndedDialog
+          open={showConfirmDialog?.type === 'ended'}
+          lazyMount
+          unmountOnExit
+          onConfirm={() => {
+            if (showConfirmDialog?.action === 'clear') {
+              clear();
+            } else {
+              init();
+            }
+            setShowConfirmDialog(undefined);
+          }}
+          onOpenChange={({ open }) => {
+            if (!open) {
+              setShowConfirmDialog(undefined);
+            }
+          }}
+        />
+        <ConfirmMidSortDialog
+          open={showConfirmDialog?.type === 'mid-sort'}
+          lazyMount
+          unmountOnExit
+          onConfirm={() => {
+            if (showConfirmDialog?.action === 'clear') {
+              clear();
+            } else {
+              init();
+            }
+            setShowConfirmDialog(undefined);
+          }}
+          onOpenChange={({ open }) => {
+            if (!open) {
+              setShowConfirmDialog(undefined);
+            }
+          }}
+        />
+        <ConfirmNewSessionDialog
+          open={showConfirmDialog?.type === 'new-session'}
+          lazyMount
+          unmountOnExit
+          onConfirm={() => {
+            // User chose to accept the new link (reset current session and use new params)
+            clear();
+            setShowConfirmDialog(undefined);
+          }}
+          onOpenChange={({ open }) => {
+            if (!open) {
+              // User dismissed/cancelled (keep current session, remove URL params)
+              const url = new URL(window.location.href);
+              url.search = '';
+              window.history.replaceState({}, '', url.toString());
+              setShowConfirmDialog(undefined);
+            }
+          }}
+        />
+        <SortingPreviewDialog
+          open={showConfirmDialog?.type === 'preview'}
+          lazyMount
+          unmountOnExit
+          items={listToSort}
+          getItemName={(item) => (item as Character).fullName || ''}
+          onOpenChange={({ open }) => {
+            if (!open) {
+              setShowConfirmDialog(undefined);
+            }
+          }}
+        />
+      </Suspense>
     </>
   );
 }
