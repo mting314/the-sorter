@@ -6,25 +6,17 @@ export type DiffType =
   | { type: 'na' };
 
 /**
- * Find the position of a song in a ranking (2D array)
- * Returns the starting rank of the tier the song is in
+ * Find the position of a song in a ranking (flat array)
+ * Returns the 1-based rank of the song
  * Returns null if the song is not found
  *
  * @example
- * findSongPosition('3', [['1', '2'], ['3'], ['4', '5']])
- * // Returns 3 (songs 1 and 2 are in first tier, so song 3 starts at rank 3)
+ * findSongPosition('3', ['1', '2', '3', '4', '5'])
+ * // Returns 3
  */
-export function findSongPosition(songId: string, ranking: string[][]): number | null {
-  let currentRank = 1;
-
-  for (const tier of ranking) {
-    if (tier.includes(songId)) {
-      return currentRank;
-    }
-    currentRank += tier.length;
-  }
-
-  return null;
+export function findSongPosition(songId: string, ranking: string[]): number | null {
+  const index = ranking.indexOf(songId);
+  return index === -1 ? null : index + 1;
 }
 
 /**
@@ -37,13 +29,13 @@ export function findSongPosition(songId: string, ranking: string[][]): number | 
  *
  * @example
  * // Song moved from position 3 to position 1
- * calculatePositionDiff('song1', [['a', 'b'], ['song1']], [['song1'], ['a', 'b']])
+ * calculatePositionDiff('song1', ['a', 'b', 'song1'], ['song1', 'a', 'b'])
  * // Returns { type: 'up', amount: 2 }
  */
 export function calculatePositionDiff(
   songId: string,
-  leftRanking: string[][],
-  rightRanking: string[][]
+  leftRanking: string[],
+  rightRanking: string[]
 ): DiffType {
   const leftPos = findSongPosition(songId, leftRanking);
   const rightPos = findSongPosition(songId, rightRanking);
