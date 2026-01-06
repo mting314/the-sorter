@@ -13,6 +13,7 @@ import { useUserRankingsSortData } from '~/hooks/useUserRankingsSortData';
 import { UserRankingCard } from '~/components/sorter/UserRankingCard';
 import { usePageContext } from 'vike-react/usePageContext';
 import { GroupKey } from '~/types/user-rankings';
+import { GROUP_NAMES } from '~/constants/groups';
 
 const RankingResultsView = lazy(() =>
   import('../../../components/results/rankings/RankingResultsView').then((m) => ({
@@ -79,8 +80,8 @@ export function Page() {
   const currentRight = rightItem && listToSort.find((l) => l.id === rightItem[0]);
 
   // Full title = group you're ranking + ranking title
-  const titlePrefix = groupKey;
-  const title = t('ranking-ranking-title');
+  const titlePrefix = GROUP_NAMES[groupKey];
+  const title = titlePrefix + ' ' + t('ranking-ranking-title');
 
   const isSorting = !!state;
 
@@ -181,6 +182,9 @@ export function Page() {
                           onClick={() => left()}
                           ranking={currentLeft}
                           groupKey={groupKey}
+                          // These control showing the difference in position of songs between left and right rankings
+                          showDiffs={showDiffsMode}
+                          comparedRanking={currentRight}
                           flex={1}
                         />
                         <Box hideBelow="sm">
@@ -192,7 +196,7 @@ export function Page() {
                           onClick={() => right()}
                           ranking={currentRight}
                           groupKey={groupKey}
-                          // only show diffs on the right card, and feed it the rankings from the left card as a comparison
+                          // These control showing the difference in position of songs between left and right rankings
                           showDiffs={showDiffsMode}
                           comparedRanking={currentLeft}
                           flex={1}
@@ -254,7 +258,7 @@ export function Page() {
             )}
             {state.arr && isEnded && (
               <Suspense>
-                <RankingResultsView userRankingData={[]} order={state.arr} />
+                <RankingResultsView userRankingData={listToSort} order={state.arr} />
               </Suspense>
             )}
           </Stack>
