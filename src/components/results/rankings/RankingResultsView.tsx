@@ -16,19 +16,67 @@ import type { WithRank } from '~/types';
 import { Text } from '~/components/ui/text';
 import { Button } from '~/components/ui/button';
 import type { RootProps } from '~/components/ui/styled/tabs';
-import { UserRankingWithGroup } from '~/types/user-rankings';
+import { GroupKey, UserRanking } from '~/types/user-rankings';
 import { RankingRankingTable } from './RankingRankingTable';
 
-// Takes in a list of rankings with an order and renders a list of rankings with the order applied
-
+/**
+ * Displays the final results of a ranking sorting session in a table format with export capabilities.
+ *
+ * This component processes a sort order array and maps it to the actual user ranking data,
+ * handling ties and calculating ranks. It provides functionality to export results as
+ * screenshots or downloads with customizable titles and descriptions.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <RankingResultsView
+ *   userRankingData={userRankings}
+ *   groupKey="ceriseBouquet"
+ *   order={[["Alice"], ["Bob", "Carol"], ["Dave"]]}
+ *   titlePrefix="Cerise Bouquet"
+ * />
+ * ```
+ *
+ * @param {Object} props - Component props
+ * @param {UserRanking[]} props.userRankingData - Array of all user ranking objects being sorted.
+ *   Must contain objects with at minimum a `userName` field that matches the userNames in the order array.
+ * @param {GroupKey} props.groupKey - The group key (e.g., "ceriseBouquet", "dollchestra")
+ *   used to identify which song group rankings to display.
+ * @param {string[][]} [props.order] - 2D array representing the sort order with ties.
+ *   - Each outer array element represents a rank position
+ *   - Inner arrays contain userNames of items tied at that rank
+ *   - Example: [["Alice"], ["Bob", "Carol"], ["Dave"]] means:
+ *     - Rank 1: userName "Alice"
+ *     - Rank 2: userNames "Bob" and "Carol" (tied)
+ *     - Rank 4: userName "Dave" (note the gap due to the tie)
+ * @param {string} [props.titlePrefix] - Optional prefix for the result title (e.g., group name).
+ *   Used in the export filename and default title.
+ * @param {RootProps} props...rest - Additional props passed to the Tabs.Root component
+ *
+ * @returns {JSX.Element} A tabbed interface displaying:
+ *   - Export settings accordion (title, description)
+ *   - Screenshot/download buttons
+ *   - Table view of ranked results
+ *   - Hidden rendering canvas for screenshot generation
+ *
+ * @remarks
+ * - The component uses a merge sort result format where ties are represented as arrays
+ * - Ranks are calculated automatically based on position, with gaps after ties
+ * - Screenshots are generated at 2x scale (2560px width) from a hidden canvas
+ * - The current tab selection is persisted to localStorage
+ * - Supports both native share API and clipboard fallback for screenshots
+ * - We need to pass in the groupKey to pass later on to the RankingRankingTable component so that it knows which song rankings to display since the whole userRankingData array contains all groups' rankings
+ */
 export function RankingResultsView({
   titlePrefix,
   userRankingData,
+  groupKey,
   order,
   ...props
 }: RootProps & {
   titlePrefix?: string;
-  userRankingData: UserRankingWithGroup[];
+  userRankingData: UserRanking[];
+  groupKey: GroupKey;
   order?: string[][];
 }) {
   const { toast } = useToaster();
@@ -56,19 +104,19 @@ export function RankingResultsView({
             .reduce((p, c) => p + (Array.isArray(c) ? c.length : 1), 1);
           if (Array.isArray(ids)) {
             return ids
-              .map((id) => {
-                const ranking = userRankingData.find((s) => s.id === `${id}`);
+              .map((userName) => {
+                const ranking = userRankingData.find((s) => s.userName === userName);
                 return ranking ? { rank: startRank, ...ranking } : null;
               })
-              .filter((d): d is WithRank<UserRankingWithGroup> => d !== null);
+              .filter((d): d is WithRank<UserRanking> => d !== null);
           } else {
-            // case when we only have a single id, i.e. a single item that was sorted
-            const chara = userRankingData.find((i) => i.id === ids);
+            // case when we only have a single userName, i.e. a single item that was sorted
+            const chara = userRankingData.find((i) => i.userName === ids);
             if (!chara) return [];
             return [{ rank: startRank, ...chara }];
           }
         })
-        .filter((c): c is WithRank<UserRankingWithGroup>[] => !!c) ?? []
+        .filter((c): c is WithRank<UserRanking>[] => !!c) ?? []
     ).flatMap((s) => s);
   }, [order, userRankingData]);
 
@@ -170,12 +218,6 @@ export function RankingResultsView({
           </Accordion.Root>
           <HStack justifyContent="space-between" w="full">
             <Wrap justifyContent="flex-end" w="full">
-              {/* <Button variant="subtle" onClick={() => void exportJSON()}>
-                <FaCopy /> {t('results.export_json')}
-              </Button>
-              <Button variant="subtle" onClick={() => void exportText()}>
-                <FaCopy /> {t('results.copy_text')}
-              </Button> */}
               <Button variant="subtle" onClick={() => void screenshot()}>
                 <FaCopy /> {t('results.copy')}
               </Button>
@@ -203,7 +245,7 @@ export function RankingResultsView({
           </Tabs.List>
           <Box w="full" p="4">
             <Tabs.Content value="table">
-              <RankingRankingTable rankings={rankings} />
+              <RankingRankingTable rankings={rankings} groupKey={groupKey} />
             </Tabs.Content>
           </Box>
         </Tabs.Root>
@@ -219,9 +261,9 @@ export function RankingResultsView({
             {description && <Text>{description}</Text>}
             {/* wtf does this do */}
             {currentTab === 'table' ? (
-              <RankingRankingTable rankings={rankings} />
+              <RankingRankingTable rankings={rankings} groupKey={groupKey} />
             ) : (
-              <RankingRankingTable rankings={rankings} />
+              <RankingRankingTable rankings={rankings} groupKey={groupKey} />
             )}
             <Text textAlign="end">
               {t('results.generated_at')}: {timestamp.toLocaleString()}
