@@ -72,14 +72,3 @@ export function calculatePositionDiff(
   // Song moved down (worse position)
   return { type: 'down', amount: diff };
 }
-
-/**
- * Color mapping for diff types
- */
-export const DIFF_COLORS = {
-  up: 'green.500', // Better position
-  down: 'red.500', // Worse position
-  same: 'gray.500', // Same position
-  new: 'blue.500', // New in this ranking
-  na: 'gray.400', // Not in this ranking
-} as const;
