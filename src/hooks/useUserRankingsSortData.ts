@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSorter } from './useSorter';
 import { useUserRankingsData } from './useUserRankingsData';
-import type { GroupKey, UserRankingWithGroup } from '~/types/user-rankings';
+import type { GroupKey, UserRanking } from '~/types/user-rankings';
 import { useLocalStorage } from './useLocalStorage';
 
 export const useUserRankingsSortData = (group: GroupKey) => {
@@ -14,15 +14,13 @@ export const useUserRankingsSortData = (group: GroupKey) => {
     return allUserRankings
       .filter((user) => user.rankings[group] && user.rankings[group]!.length > 0)
       .map((user) => ({
-        ...user,
-        currentGroup: group,
-        currentRanking: user.rankings[group]!
-      })) as UserRankingWithGroup[];
+        ...user
+      })) as UserRanking[];
   }, [allUserRankings, group]);
 
-  // Use the existing sorter hook with user IDs
+  // Use the existing sorter hook with userNames
   const sorterHook = useSorter(
-    listToSort.map((u) => u.id),
+    listToSort.map((u) => u.userName),
     `ranking-rankings-${group}` // Unique localStorage key per group
   );
 

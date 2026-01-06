@@ -3,10 +3,16 @@ import type { WithRank } from '~/types';
 import { Stack } from 'styled-system/jsx';
 import { Table } from '~/components/ui/table';
 import { Text } from '~/components/ui/text';
-import { UserRankingWithGroup } from '~/types/user-rankings';
+import { GroupKey, UserRanking } from '~/types/user-rankings';
 import { UserRankingCard } from '~/components/sorter/UserRankingCard';
 
-export function RankingRankingTable({ rankings }: { rankings: WithRank<UserRankingWithGroup>[] }) {
+export function RankingRankingTable({
+  rankings,
+  groupKey
+}: {
+  rankings: WithRank<UserRanking>[]; // array of `UserRanking`s, each with a rank property so it can be displayed in order
+  groupKey: GroupKey;
+}) {
   const { t } = useTranslation();
 
   return (
@@ -21,7 +27,7 @@ export function RankingRankingTable({ rankings }: { rankings: WithRank<UserRanki
       <Table.Body>
         {/* display each ranking in sorted rank order */}
         {rankings.map((individualRanking, idx) => {
-          const { rank, userName, currentGroup } = individualRanking;
+          const { rank, userName } = individualRanking;
 
           return (
             <Table.Row
@@ -42,7 +48,7 @@ export function RankingRankingTable({ rankings }: { rankings: WithRank<UserRanki
               {/* Ranking Display */}
               <Table.Cell>
                 <Stack gap="1" alignItems="center" w="full" py="2">
-                  <UserRankingCard ranking={individualRanking} groupKey={currentGroup} />
+                  <UserRankingCard ranking={individualRanking} groupKey={groupKey} />
                 </Stack>
               </Table.Cell>
             </Table.Row>

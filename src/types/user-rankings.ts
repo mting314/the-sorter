@@ -1,7 +1,6 @@
 export type GroupKey = 'ceriseBouquet' | 'dollchestra' | 'miracraPark' | 'groupSongs' | 'edelNote';
 
 export interface UserRanking {
-  id: string;
   userName: string;
   profilePicture: string;
   rankings: Partial<Record<GroupKey, string[]>>;
