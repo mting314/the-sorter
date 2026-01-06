@@ -18,6 +18,8 @@ import { Button } from '~/components/ui/button';
 import type { RootProps } from '~/components/ui/styled/tabs';
 import { GroupKey, UserRanking } from '~/types/user-rankings';
 import { RankingRankingTable } from './RankingRankingTable';
+import { useSongData } from '~/hooks/useSongData';
+import { useArtistsData } from '~/hooks/useArtistsData';
 
 /**
  * Displays the final results of a ranking sorting session in a table format with export capabilities.
@@ -86,6 +88,9 @@ export function RankingResultsView({
   const [timestamp, setTimestamp] = useState(new Date());
   const [showRenderingCanvas, setShowRenderingCanvas] = useState(false);
   const { t, i18n: _i18n } = useTranslation();
+
+  const songData = useSongData();
+  const artistsData = useArtistsData();
 
   const tabs = useMemo(() => [{ id: 'table', label: t('results.table') }], [t]);
 
@@ -165,8 +170,60 @@ export function RankingResultsView({
     }
   };
 
+  const exportJSON = async () => {
+    await navigator.clipboard.writeText(
+      JSON.stringify(
+        order?.flatMap((item, idx) =>
+          item.map((i) => {
+            const userRanking = userRankingData.find((s) => s.userName === `${i}`);
+            const userSongIds = userRanking?.rankings[groupKey] ?? [];
+
+            // Enrich each song ID with title and artist
+            const enrichedSongs = userSongIds.map((songId, idx) => {
+              const song = songData.find((s) => s.id === songId);
+              if (!song) {
+                return { id: songId, title: 'Unknown', artist: 'Unknown' };
+              }
+
+              // Get artist information
+              const artistId = song.artists?.[0]?.id;
+              const artist = artistId ? artistsData.find((a) => a.id === artistId) : undefined;
+              const artistName = artist?.name || 'Unknown';
+
+              return `${idx + 1}. ${song?.name} - ${artistName}`;
+            });
+
+            // TODO: this will need to be updated to handle the original tie behavior where rankings are a 2D array
+            return {
+              rank: idx + 1,
+              userName: userRanking?.userName,
+              ranking: enrichedSongs
+            };
+          })
+        ),
+        null,
+        2
+      )
+    );
+    toast?.({ description: t('toast.text_copied') });
+  };
+
+  const exportText = async () => {
+    await navigator.clipboard.writeText(
+      order
+        ?.flatMap((item, idx) =>
+          item.map((i) => {
+            const s = userRankingData.find((s) => s.userName === `${i}`);
+            return `${idx + 1}. ${s?.userName}`;
+          })
+        )
+        .join('\n') ?? ''
+    );
+    toast?.({ description: t('toast.text_copied') });
+  };
+
   useEffect(() => {
-    const sortType = t('songs');
+    const sortType = t('ranking-ranking-title');
     const type = t('results.ranking');
     setTitle(
       titlePrefix
@@ -218,6 +275,12 @@ export function RankingResultsView({
           </Accordion.Root>
           <HStack justifyContent="space-between" w="full">
             <Wrap justifyContent="flex-end" w="full">
+              <Button variant="subtle" onClick={() => void exportJSON()}>
+                <FaCopy /> {t('results.export_json')}
+              </Button>
+              <Button variant="subtle" onClick={() => void exportText()}>
+                <FaCopy /> {t('results.song_rankings.copy_text')}
+              </Button>
               <Button variant="subtle" onClick={() => void screenshot()}>
                 <FaCopy /> {t('results.copy')}
               </Button>
