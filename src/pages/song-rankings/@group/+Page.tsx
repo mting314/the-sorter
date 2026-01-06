@@ -75,8 +75,8 @@ export function Page() {
   const { left: leftItem, right: rightItem } =
     (state && getCurrentItem(state)) || ({} as { left: string[]; right: string[] });
 
-  const currentLeft = leftItem && listToSort.find((l) => l.id === leftItem[0]);
-  const currentRight = rightItem && listToSort.find((l) => l.id === rightItem[0]);
+  const currentLeft = leftItem && listToSort.find((l) => l.userName === leftItem[0]);
+  const currentRight = rightItem && listToSort.find((l) => l.userName === rightItem[0]);
 
   // Full title = group you're ranking + ranking title
   const titlePrefix = GROUP_NAMES[groupKey];
@@ -251,7 +251,11 @@ export function Page() {
             )}
             {state.arr && isEnded && (
               <Suspense>
-                <RankingResultsView userRankingData={listToSort} order={state.arr} />
+                <RankingResultsView
+                  userRankingData={listToSort}
+                  groupKey={groupKey}
+                  order={state.arr}
+                />
               </Suspense>
             )}
           </Stack>
