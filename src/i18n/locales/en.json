@@ -111,6 +111,9 @@
         "footer": "Go make your own!\n#LoveLiveRanking"
       }
     },
+    "song_rankings": {
+      "copy_text": "Copy results as Text (User Names only)"
+    },
     "share_x": "Post on X",
     "copy_results": "Copy Results",
     "settings": {
