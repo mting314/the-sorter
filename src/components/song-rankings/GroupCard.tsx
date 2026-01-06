@@ -22,12 +22,12 @@ export function GroupCard({ groupKey, groupName, songCount, rankingCount }: Grou
   return (
     <a href={join(import.meta.env.BASE_URL, `/song-rankings/${groupKey}`)}>
       <Card.Root
-        w="full"
         cursor="pointer"
+        w="full"
         transition="all"
         _hover={{
           shadow: 'lg',
-          borderColor: 'colorPalette.500',
+          borderColor: 'colorPalette.500'
         }}
       >
         <Card.Body gap={3}>
@@ -36,10 +36,10 @@ export function GroupCard({ groupKey, groupName, songCount, rankingCount }: Grou
           </Card.Title>
 
           <Stack gap={1}>
-            <Text fontSize="sm" color="fg.muted">
+            <Text color="fg.muted" fontSize="sm">
               {t('song_rankings.songs_count', { count: songCount })}
             </Text>
-            <Text fontSize="sm" color="fg.muted">
+            <Text color="fg.muted" fontSize="sm">
               {t('song_rankings.rankings_count', { count: rankingCount })}
             </Text>
           </Stack>
