@@ -31,6 +31,7 @@
     "deselect_all": "Deselect All",
     "no_tie_mode": "No DD Allowed Mode (Hard)",
     "heardle_mode": "Heardle Mode",
+    "show_ranking_diffs_mode": "Show Ranking Diffs",
     "generation": {
       "103": "103th",
       "104": "104th",

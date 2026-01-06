@@ -21,7 +21,7 @@ export function Page() {
       dollchestra: { songCount: 0, rankingCount: 0 },
       miracraPark: { songCount: 0, rankingCount: 0 },
       groupSongs: { songCount: 0, rankingCount: 0 },
-      edelNote: { songCount: 0, rankingCount: 0 },
+      edelNote: { songCount: 0, rankingCount: 0 }
     };
 
     // Count songs for each group
@@ -49,22 +49,17 @@ export function Page() {
   return (
     <>
       <Metadata title={t('song_rankings.title')} helmet />
-      <Stack alignItems="center" w="full" gap={6} p={{ base: 4, md: 6 }}>
-        <Stack alignItems="center" gap={2}>
+      <Stack gap={6} alignItems="center" w="full" p={{ base: 4, md: 6 }}>
+        <Stack gap={2} alignItems="center">
           <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight="bold">
             {t('song_rankings.select_group')}
           </Text>
-          <Text textAlign="center" color="fg.muted">
+          <Text color="fg.muted" textAlign="center">
             {t('song_rankings.description')}
           </Text>
         </Stack>
 
-        <Grid
-          columns={{ base: 1, md: 2, lg: 3 }}
-          gap={4}
-          w="full"
-          maxW="1200px"
-        >
+        <Grid gap={4} w="full" maxW="1200px" columns={{ base: 1, md: 2, lg: 3 }}>
           {Object.entries(GROUP_NAMES).map(([key, name]) => {
             const groupKey = key as GroupKey;
             const stats = groupStats[groupKey];
