@@ -1,66 +1,59 @@
 import { Suspense, lazy, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../../../components//ui/button';
-import { Kbd } from '../../../components//ui/kbd';
-import { Progress } from '../../../components//ui/progress';
-import { Switch } from '../../../components//ui/switch';
-import { Text } from '../../../components//ui/text';
+import { Button } from '../../../components/ui/button';
+import { Kbd } from '../../../components/ui/kbd';
+import { Progress } from '../../../components/ui/progress';
+import { Switch } from '../../../components/ui/switch';
+import { Text } from '../../../components/ui/text';
 import type { Character } from '../../../types';
 import { getCurrentItem } from '../../../utils/sort';
 import { Metadata } from '~/components/layout/Metadata';
 import { Box, HStack, Stack, Wrap } from 'styled-system/jsx';
 import { useUserRankingsSortData } from '~/hooks/useUserRankingsSortData';
 import { UserRankingCard } from '~/components/sorter/UserRankingCard';
-import { useUserRankingsData } from '~/hooks/useUserRankingsData';
+import { usePageContext } from 'vike-react/usePageContext';
+import { GroupKey } from '~/types/user-rankings';
 
 const RankingResultsView = lazy(() =>
-  import('../../../components//results/rankings/RankingResultsView').then((m) => ({
+  import('../../../components/results/rankings/RankingResultsView').then((m) => ({
     default: m.RankingResultsView
   }))
 );
 
 const ConfirmMidSortDialog = lazy(() =>
-  import('../../../components//dialog/ConfirmDialog').then((m) => ({
+  import('../../../components/dialog/ConfirmDialog').then((m) => ({
     default: m.ConfirmMidSortDialog
   }))
 );
 
 const ConfirmEndedDialog = lazy(() =>
-  import('../../../components//dialog/ConfirmDialog').then((m) => ({
+  import('../../../components/dialog/ConfirmDialog').then((m) => ({
     default: m.ConfirmEndedDialog
   }))
 );
 
 const ConfirmNewSessionDialog = lazy(() =>
-  import('../../../components//dialog/ConfirmDialog').then((m) => ({
+  import('../../../components/dialog/ConfirmDialog').then((m) => ({
     default: m.ConfirmNewSessionDialog
   }))
 );
 
-const CharacterInfoDialog = lazy(() =>
-  import('../../../components//dialog/CharacterInfoDialog').then((m) => ({
-    default: m.CharacterInfoDialog
-  }))
-);
-
-const CharacterFilters = lazy(() =>
-  import('../../../components//sorter/CharacterFilters').then((m) => ({
-    default: m.CharacterFilters
-  }))
-);
-
 const SortingPreviewDialog = lazy(() =>
-  import('../../../components//sorter/SortingPreviewDialog').then((m) => ({
+  import('../../../components/sorter/SortingPreviewDialog').then((m) => ({
     default: m.SortingPreviewDialog
   }))
 );
 
 export function Page() {
-  const allRankings = useUserRankingsData();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+
+  const pageContext = usePageContext();
+  const groupKey = (pageContext.routeParams as { group: GroupKey }).group;
   const {
     noTieMode,
     setNoTieMode,
+    showDiffsMode,
+    setShowDiffsMode,
     init,
     left,
     right,
@@ -73,7 +66,7 @@ export function Page() {
     listToSort,
     listCount,
     clear
-  } = useUserRankingsSortData('ceriseBouquet'); // TODO: get group from URL
+  } = useUserRankingsSortData(groupKey);
   const [showConfirmDialog, setShowConfirmDialog] = useState<{
     type: 'mid-sort' | 'ended' | 'new-session' | 'preview';
     action: 'reset' | 'clear';
@@ -131,6 +124,12 @@ export function Page() {
             </Suspense> */}
             <Wrap>
               <Switch
+                checked={showDiffsMode}
+                disabled={isSorting}
+                onCheckedChange={(e) => setShowDiffsMode(e.checked)}
+              ></Switch>
+              {t('settings.show_ranking_diffs_mode')}
+              <Switch
                 checked={noTieMode}
                 disabled={isSorting}
                 onCheckedChange={(e) => setNoTieMode(e.checked)}
@@ -180,7 +179,7 @@ export function Page() {
                         <UserRankingCard
                           onClick={() => left()}
                           ranking={currentLeft}
-                          groupKey={'ceriseBouquet'}
+                          groupKey={groupKey}
                           flex={1}
                         />
                         <Box hideBelow="sm">
@@ -191,7 +190,10 @@ export function Page() {
                         <UserRankingCard
                           onClick={() => right()}
                           ranking={currentRight}
-                          groupKey={'ceriseBouquet'}
+                          groupKey={groupKey}
+                          // only show diffs on the right card, and feed it the rankings from the left card as a comparison
+                          showDiffs={showDiffsMode}
+                          comparedRanking={currentLeft}
                           flex={1}
                         />
                         <Box hideBelow="sm">
