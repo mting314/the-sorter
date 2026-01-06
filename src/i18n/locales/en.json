@@ -212,8 +212,9 @@
     "songs_count": "{{count}} songs",
     "rankings_count": "{{count}} user rankings",
     "start_sorting": "Start Comparing",
-    "comparison_count": "Comparison {{current}} of {{total}}",
-    "your_result": "Your Ranking of User Rankings"
+    "your_result": "Your Ranking of User Rankings",
+    "ranking-username": "Ranking User",
+    "rankings": "Rankings"
   },
   "setlistPrediction": {
     "title": "Setlist Prediction",
