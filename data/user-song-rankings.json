@@ -3,41 +3,43 @@
   "lastUpdated": "2025-12-31T00:00:00Z",
   "users": [
     {
-      "id": "user_alice",
-      "userName": "Alice",
+      "id": "user_coolguy5530",
+      "userName": "coolguy5530",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
-        "ceriseBouquet": ["504", "541", "542", "543", "548", "552", "574", "579"],
-        "dollchestra": ["505", "544", "545", "546", "547", "553"]
+        "ceriseBouquet": ["543", "542", "705", "552", "579", "752", "740", "675", "777", "665", "612", "827", "620", "541", "794", "504", "585", "739", "648", "574", "806", "548", "621", "795", "590", "730"]
       }
     },
     {
-      "id": "user_bob",
-      "userName": "Bob",
+      "id": "user_wumbo",
+      "userName": "wumbo",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
-        "ceriseBouquet": ["543", "504", "541", "542", "548", "552", "574"],
-        "dollchestra": ["544", "505", "545", "546", "547"],
-        "miracraPark": ["506", "555", "589", "613"]
+        "ceriseBouquet": ["579", "740", "752", "730", "777", "675", "795", "621", "665", "806", "612", "827", "794", "585", "705", "739", "552", "504", "574", "590", "548", "541", "648", "620", "543", "542"]
       }
     },
     {
-      "id": "user_carol",
-      "userName": "Carol",
+      "id": "user_yargas",
+      "userName": "yargas",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
-        "ceriseBouquet": ["542", "541", "504", "543", "579", "574"],
-        "groupSongs": ["632", "715", "720"],
-        "edelNote": ["719", "756", "757", "758", "782"]
+        "ceriseBouquet": ["579", "552", "620", "675", "705", "612", "806", "777", "548", "827", "542", "541", "504", "794", "543", "739", "590", "665", "740", "574", "621", "648", "585", "795", "730", "752"]
       }
     },
     {
-      "id": "user_dave",
-      "userName": "Dave",
+      "id": "user_reiji",
+      "userName": "reiji",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
-        "miracraPark": ["618", "623", "506", "555", "589", "613"],
-        "edelNote": ["756", "719", "757", "758", "782", "811"]
+        "ceriseBouquet": ["585", "552", "579", "543", "777", "740", "542", "541", "675", "705", "612", "621", "620", "574", "548", "504", "752", "827", "806", "794", "739", "590", "665", "648", "795", "730"]
+      }
+    },
+    {
+      "id": "user_sixzilla",
+      "userName": "sixzilla",
+      "profilePicture": "/assets/avatars/default-avatar.png",
+      "rankings": {
+        "ceriseBouquet": ["590", "675", "504", "579", "552", "777", "795", "620", "612", "827", "665", "574", "740", "548", "794", "585", "541", "648", "739", "705", "621", "543", "542", "730", "806", "752"]
       }
     }
   ]
