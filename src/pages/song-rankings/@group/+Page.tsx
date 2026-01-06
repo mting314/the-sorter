@@ -12,7 +12,7 @@ import { Box, HStack, Stack, Wrap } from 'styled-system/jsx';
 import { useUserRankingsSortData } from '~/hooks/useUserRankingsSortData';
 import { UserRankingCard } from '~/components/sorter/UserRankingCard';
 import { usePageContext } from 'vike-react/usePageContext';
-import { GroupKey } from '~/types/user-rankings';
+import { GroupKey, UserRanking } from '~/types/user-rankings';
 import { GROUP_NAMES } from '~/constants/groups';
 
 const RankingResultsView = lazy(() =>
@@ -117,13 +117,6 @@ export function Page() {
         <Text textAlign="center">{t('description')}</Text>
         {!isSorting && (
           <>
-            {/* <Suspense fallback={<LoadingCharacterFilters />}>
-              {import.meta.env.SSR ? (
-                <LoadingCharacterFilters />
-              ) : (
-                <CharacterFilters filters={filters} setFilters={setFilters} />
-              )}
-            </Suspense> */}
             <Wrap>
               <Switch
                 checked={showDiffsMode}
@@ -171,13 +164,14 @@ export function Page() {
                 <Stack flex="1" alignItems="center" w="full">
                   {currentLeft && currentRight && (
                     <HStack
-                      flex={1}
+                      gap="150"
+                      // flex={1}
                       flexDirection={{ base: 'column', sm: 'row' }}
-                      justifyContent="stretch"
+                      justifyContent="center"
                       alignItems="stretch"
                       width="full"
                     >
-                      <Stack flex="1" alignItems="center" w="full">
+                      <Stack alignItems="center" maxW="600px">
                         <UserRankingCard
                           onClick={() => left()}
                           ranking={currentLeft}
@@ -191,7 +185,7 @@ export function Page() {
                           <Kbd>←</Kbd>
                         </Box>
                       </Stack>
-                      <Stack flex="1" alignItems="center" w="full">
+                      <Stack alignItems="center" maxW="600px">
                         <UserRankingCard
                           onClick={() => right()}
                           ranking={currentRight}
@@ -325,7 +319,8 @@ export function Page() {
           lazyMount
           unmountOnExit
           items={listToSort}
-          getItemName={(item) => (item as Character).fullName || ''}
+          // Show the usernames of those with rankings to sort
+          getItemName={(item) => (item as UserRanking).userName || ''}
           onOpenChange={({ open }) => {
             if (!open) {
               setShowConfirmDialog(undefined);
