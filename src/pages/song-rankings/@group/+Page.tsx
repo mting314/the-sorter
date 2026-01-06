@@ -5,7 +5,6 @@ import { Kbd } from '../../../components/ui/kbd';
 import { Progress } from '../../../components/ui/progress';
 import { Switch } from '../../../components/ui/switch';
 import { Text } from '../../../components/ui/text';
-import type { Character } from '../../../types';
 import { getCurrentItem } from '../../../utils/sort';
 import { Metadata } from '~/components/layout/Metadata';
 import { Box, HStack, Stack, Wrap } from 'styled-system/jsx';

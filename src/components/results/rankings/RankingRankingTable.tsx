@@ -7,9 +7,7 @@ import { UserRankingWithGroup } from '~/types/user-rankings';
 import { UserRankingCard } from '~/components/sorter/UserRankingCard';
 
 export function RankingRankingTable({ rankings }: { rankings: WithRank<UserRankingWithGroup>[] }) {
-  const { t, i18n } = useTranslation();
-
-  const lang = i18n.language;
+  const { t } = useTranslation();
 
   return (
     <Table.Root size="sm">
@@ -44,7 +42,7 @@ export function RankingRankingTable({ rankings }: { rankings: WithRank<UserRanki
               {/* Ranking Display */}
               <Table.Cell>
                 <Stack gap="1" alignItems="center" w="full" py="2">
-                  <UserRankingCard ranking={individualRanking} groupKey={currentGroup}  />
+                  <UserRankingCard ranking={individualRanking} groupKey={currentGroup} />
                 </Stack>
               </Table.Cell>
             </Table.Row>

@@ -3,7 +3,7 @@ export const GROUP_ARTIST_IDS = {
   dollchestra: '135',
   miracraPark: '136',
   groupSongs: '175',
-  edelNote: '201',
+  edelNote: '201'
 } as const;
 
 export const GROUP_NAMES = {
@@ -11,5 +11,5 @@ export const GROUP_NAMES = {
   dollchestra: 'DOLLCHESTRA',
   miracraPark: 'Miracra Park',
   groupSongs: 'Group Songs',
-  edelNote: 'Edel Note',
+  edelNote: 'Edel Note'
 } as const;
