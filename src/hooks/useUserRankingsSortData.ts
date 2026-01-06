@@ -7,6 +7,7 @@ import { useLocalStorage } from './useLocalStorage';
 export const useUserRankingsSortData = (group: GroupKey) => {
   const allUserRankings = useUserRankingsData();
   const [noTieMode, setNoTieMode] = useLocalStorage(`dd-mode-${group}`, false);
+  const [showDiffsMode, setShowDiffsMode] = useLocalStorage(`show-diffs-mode-${group}`, false);
 
   // Filter to only users who have rankings for this group
   const listToSort = useMemo(() => {
@@ -29,6 +30,8 @@ export const useUserRankingsSortData = (group: GroupKey) => {
     ...sorterHook,
     noTieMode: noTieMode ?? false, // default to false
     setNoTieMode,
+    showDiffsMode: showDiffsMode ?? false,
+    setShowDiffsMode,
     listToSort,
     listCount: listToSort.length
   };
