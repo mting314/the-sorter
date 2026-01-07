@@ -25,6 +25,7 @@ export const pageRoutes = new Elysia()
                 data={data as DataRecord[]}
                 filename={activeFile}
                 filter={query.filter as string | undefined}
+                artistFilter={query.artistFilter as string | undefined}
                 sort={query.sort as string | undefined}
                 sortDir={(query.dir as 'asc' | 'desc') || 'asc'}
                 page={Number(query.page) || 1}
@@ -55,6 +56,7 @@ export const pageRoutes = new Elysia()
             filename={filename}
             filter={query.filter as string | undefined}
             sort={query.sort as string | undefined}
+            artistFilter={query.artistFilter as string | undefined}
             sortDir={(query.dir as 'asc' | 'desc') || 'asc'}
             page={Number(query.page) || 1}
           />
