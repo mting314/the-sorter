@@ -114,15 +114,14 @@ export function Page() {
           {title}
         </Text>
         <Text textAlign="center">{t('description')}</Text>
-        {!isSorting && (
-          <>
-            <Wrap>
-              <Switch
-                checked={showDiffsMode}
-                disabled={isSorting}
-                onCheckedChange={(e) => setShowDiffsMode(e.checked)}
-              ></Switch>
-              {t('settings.show_ranking_diffs_mode')}
+        <>
+          <Wrap>
+            <Switch
+              checked={showDiffsMode}
+              onCheckedChange={(e) => setShowDiffsMode(e.checked)}
+            ></Switch>
+            {t('settings.show_ranking_diffs_mode')}
+            {!isSorting && (
               <Switch
                 checked={noTieMode}
                 disabled={isSorting}
@@ -130,9 +129,9 @@ export function Page() {
               >
                 {t('settings.no_tie_mode')}
               </Switch>
-            </Wrap>
-          </>
-        )}
+            )}
+          </Wrap>
+        </>
         <Text fontSize="sm" fontWeight="bold">
           {t('settings.sort_count', { count: listCount })}
         </Text>
