@@ -16,13 +16,6 @@ export function RankingSongItem({ song, rank, diff, showDiff = false }: RankingS
   const color = getSongColor(song);
   const songName = song.name as string;
 
-  // Get artist name
-  // const songArtists = song.artists
-  //   .map((a) => artists.find((artist) => artist.id === a.id))
-  //   .filter((a): a is Artist => a !== undefined);
-
-  // const artistNames = songArtists.map((a) => getArtistName(a.name, locale)).join(', ');
-
   return (
     <HStack
       gap={2}
