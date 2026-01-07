@@ -183,23 +183,32 @@ export function DataTable({
   data,
   filename,
   filter,
+  artistFilter,
   sort,
   sortDir,
   page = 1
 }: {
-  data: DataRecord[];
-  filename: DataFileName;
-  filter?: string;
-  sort?: string;
-  sortDir?: 'asc' | 'desc';
-  page?: number;
+  data: DataRecord[]
+  filename: DataFileName
+  filter?: string
+  artistFilter?: string
+  sort?: string
+  sortDir?: 'asc' | 'desc'
+  page?: number
 }) {
   let filtered = data;
   if (filter) {
-    const q = filter.toLowerCase();
-    filtered = data.filter((row) =>
+    const q = filter.toLowerCase()
+    filtered = data.filter((row) =>{
+      // Fast path: if the artist filter is set, check that first
+      if (artistFilter) {
+        const rowArtist = (row as any).artist;
+        if (Array.isArray(rowArtist) && rowArtist.some((a) => a.id === artistFilter)) {
+          return true;
+        }
+      }
       Object.values(row).some((v) => formatValue(v).toLowerCase().includes(q))
-    );
+    });
   }
 
   if (sort) {
@@ -220,14 +229,19 @@ export function DataTable({
   // data table URL builder with current filter/sort params
   // used to build pagination links
   const buildUrl = (p: number) => {
-    const params = new URLSearchParams();
-    params.set('page', String(p));
-    if (filter) params.set('filter', filter);
-    if (sort) params.set('sort', sort);
-    if (sortDir) params.set('dir', sortDir);
-    return `/table/${filename}?${params}`;
-  };
+    const params = new URLSearchParams()
+    params.set('page', String(p))
+    if (filter) params.set('filter', filter)
+    if (artistFilter) params.set('artistFilter', artistFilter)
+    if (sort) params.set('sort', sort)
+    if (sortDir) params.set('dir', sortDir)
+    return `/table/${filename}?${params}`
+  }
+  if (filename === 'song-info.json') {
+    // get all unique artists from the data (dedupe by id)
 
+    const artistsArray = null
+  }
   return (
     <div id="table-container">
       <div class="filter-bar">
@@ -241,6 +255,30 @@ export function DataTable({
           hx-target="#table-container"
           hx-include="this"
         />
+        {filename === 'song-info.json' && (
+          <>
+            <label for="artist_selector">Choose an artist:</label>
+            <select name="artist_selector" id="artist_selection">
+              {
+            // get all unique artists from the data
+            const artistsArray = Array.from(new Set(data.flatMap((row) => {
+                    const artistField = row['artist'];
+                    if (Array.isArray(artistField)) {
+                      return artistField.map((a) => ({ id: a.id, name: a.name || a.englishName }));
+                    } else if (artistField && typeof artistField === 'object') {
+                      return [
+                        { id: artistField.id, name: artistField.name || artistField.englishName }
+                      ];
+              }
+                    return [];
+                  })
+                )
+              )
+
+            }
+            </select>
+          </>
+        )}
         <small>{filtered.length} records</small>
       </div>
 
