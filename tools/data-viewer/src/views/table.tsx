@@ -3,22 +3,48 @@ import { resolveField, type DataFileName } from '../services/data';
 
 type DataRecord = Record<string, unknown> & { id?: string };
 
+/**
+ * Derive a stable list of column keys for the table view.
+ *
+ * Scans up to the first 100 rows to collect all encountered keys, giving
+ * preference to a small set of common keys so they appear first in the
+ * rendered table (`id`, `name`, `englishName`, `fullName`). Remaining keys
+ * are appended in alphabetical order. Limiting to 100 rows keeps the scan
+ * fast for large datasets while still capturing most fields.
+ *
+ * @param data - array of records to inspect for column keys
+ * @returns ordered array of column names to render
+ */
 function getColumns(data: DataRecord[]): string[] {
-  if (data.length === 0) return [];
-  const allKeys = new Set<string>();
+  // Fast path: no data => no columns
+  if (data.length === 0) return []
+
+  // Collect unique keys seen in the dataset (up to the first 100 rows)
+  const allKeys = new Set<string>()
   for (const row of data.slice(0, 100)) {
     Object.keys(row).forEach((k) => allKeys.add(k));
   }
-  const priority = ['id', 'name', 'englishName', 'fullName'];
+
+  // Keep frequently-used columns near the front for readability
+  const priority = ['id', 'name', 'englishName', 'fullName']
+
+  // Sort keys: prioritized keys first (in priority order), then alphabetically
   const sorted = [...allKeys].sort((a, b) => {
-    const ai = priority.indexOf(a);
-    const bi = priority.indexOf(b);
-    if (ai !== -1 && bi !== -1) return ai - bi;
-    if (ai !== -1) return -1;
-    if (bi !== -1) return 1;
-    return a.localeCompare(b);
-  });
-  return sorted;
+    const ai = priority.indexOf(a)
+    const bi = priority.indexOf(b)
+
+    // Both keys are in the priority list: order by their index
+    if (ai !== -1 && bi !== -1) return ai - bi
+    // Only `a` is prioritized -> it comes first
+    if (ai !== -1) return -1
+    // Only `b` is prioritized -> it comes first
+    if (bi !== -1) return 1
+
+    // Neither is prioritized: fallback to a locale-aware alphabetical compare
+    return a.localeCompare(b)
+  })
+
+  return sorted
 }
 
 function formatValue(value: unknown): string {
@@ -191,6 +217,8 @@ export function DataTable({
   const displayData = filtered.slice(start, start + PAGE_SIZE);
   const columns = getColumns(filtered);
 
+  // data table URL builder with current filter/sort params
+  // used to build pagination links
   const buildUrl = (p: number) => {
     const params = new URLSearchParams();
     params.set('page', String(p));
