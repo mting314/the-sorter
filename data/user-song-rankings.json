@@ -3,6 +3,7 @@
   "lastUpdated": "2025-12-31T00:00:00Z",
   "users": [
     {
+      "id": "1",
       "userName": "coolguy5530",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -37,6 +38,7 @@
       }
     },
     {
+      "id": "2",
       "userName": "wumbo",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -71,6 +73,7 @@
       }
     },
     {
+      "id": "3",
       "userName": "yargas",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -105,6 +108,7 @@
       }
     },
     {
+      "id": "4",
       "userName": "reiji",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -139,6 +143,7 @@
       }
     },
     {
+      "id": "5",
       "userName": "sixzilla",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -173,6 +178,7 @@
       }
     },
     {
+      "id": "6",
       "userName": "Guren",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -207,6 +213,7 @@
       }
     },
     {
+      "id": "7",
       "userName": "Pichu",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -241,6 +248,7 @@
       }
     },
     {
+      "id": "8",
       "userName": "trioskosmos",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -275,6 +283,7 @@
       }
     },
     {
+      "id": "9",
       "userName": "red",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -309,6 +318,7 @@
       }
     },
     {
+      "id": "10",
       "userName": "Lia",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -343,6 +353,7 @@
       }
     },
     {
+      "id": "11",
       "userName": "Flammenkrieg",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -377,6 +388,7 @@
       }
     },
     {
+      "id": "12",
       "userName": "Xinlin",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -411,6 +423,7 @@
       }
     },
     {
+      "id": "13",
       "userName": "gabrieleancora",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -445,6 +458,7 @@
       }
     },
     {
+      "id": "14",
       "userName": "Sparkbeat",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -479,6 +493,7 @@
       }
     },
     {
+      "id": "15",
       "userName": "kan kan mikan",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -513,6 +528,7 @@
       }
     },
     {
+      "id": "16",
       "userName": "Shoe",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -547,6 +563,7 @@
       }
     },
     {
+      "id": "17",
       "userName": "Wataboutmi",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
@@ -581,6 +598,7 @@
       }
     },
     {
+      "id": "18",
       "userName": "Benjamin",
       "profilePicture": "/assets/avatars/default-avatar.png",
       "rankings": {
