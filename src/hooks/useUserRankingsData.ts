@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { UserRanking, UserRankingsData } from '~/types/user-rankings';
 
 /**
@@ -42,12 +42,16 @@ export interface UseUserRankingsDataResult {
   users: UserRanking[];
   isLoading: boolean;
   error: Error | null;
+  /** Re-attempt the fetch (e.g. after a network error). */
+  reload: () => void;
 }
 
 export const useUserRankingsData = (): UseUserRankingsDataResult => {
   const [users, setUsers] = useState<UserRanking[]>(cache ?? []);
   const [isLoading, setIsLoading] = useState<boolean>(cache === null);
   const [error, setError] = useState<Error | null>(null);
+  // Bumping this re-runs the load effect so already-mounted consumers can retry.
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     if (cache) {
@@ -57,6 +61,7 @@ export const useUserRankingsData = (): UseUserRankingsDataResult => {
     }
     let active = true;
     setIsLoading(true);
+    setError(null);
     loadUserRankings()
       .then((data) => {
         if (!active) return;
@@ -71,7 +76,9 @@ export const useUserRankingsData = (): UseUserRankingsDataResult => {
     return () => {
       active = false;
     };
-  }, []);
+  }, [reloadKey]);
 
-  return { users, isLoading, error };
+  const reload = useCallback(() => setReloadKey((k) => k + 1), []);
+
+  return { users, isLoading, error, reload };
 };

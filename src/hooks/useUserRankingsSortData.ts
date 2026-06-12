@@ -8,7 +8,7 @@ export const useUserRankingsSortData = (
   group: GroupKey,
   options?: { disableShortcutsRef?: { current: boolean } }
 ) => {
-  const { users: allUserRankings, isLoading, error } = useUserRankingsData();
+  const { users: allUserRankings, isLoading, error, reload } = useUserRankingsData();
   const [noTieMode, setNoTieMode] = useLocalStorage(`dd-mode-${group}`, false);
   const [blindMode, setBlindMode] = useLocalStorage(`blind-mode-${group}`, false);
 
@@ -70,6 +70,7 @@ export const useUserRankingsSortData = (
     listToSort,
     listCount: listToSort.length,
     isLoading,
-    error
+    error,
+    reload
   };
 };

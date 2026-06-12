@@ -74,7 +74,7 @@ export function UserRankingCard({
 
           if (!song) {
             return (
-              <Box key={songId} borderBottomWidth="1px" p={2}>
+              <Box key={`${songId}-${index}`} borderBottomWidth="1px" p={2}>
                 <Text color="fg.muted" fontSize="sm">
                   [Unknown Song: {songId}]
                 </Text>
@@ -91,7 +91,7 @@ export function UserRankingCard({
 
           return (
             <RankingSongItem
-              key={songId}
+              key={`${songId}-${index}`}
               song={song}
               rank={rank}
               diff={diff}

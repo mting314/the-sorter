@@ -83,7 +83,7 @@ export function RankingResultsView({
 }) {
   const { toast } = useToaster();
   const [title, setTitle] = useState<string>('My LoveLive! Songs Ranking Ranking');
-  const [description, setDescription] = useState<string>();
+  const [description, setDescription] = useState<string>('');
   const [currentTab, setCurrentTab] = useLocalStorage<'table'>('songs-result-tab-v2', 'table');
   const [timestamp, setTimestamp] = useState(new Date());
   const [showRenderingCanvas, setShowRenderingCanvas] = useState(false);
@@ -164,7 +164,7 @@ export function RankingResultsView({
       const blob = await makeScreenshot();
       if (!blob) return;
       const saveAs = (await import('file-saver')).saveAs;
-      saveAs(new File([blob], `${titlePrefix ?? 'll'}-sorted-${timestamp.valueOf()}.png`));
+      saveAs(new File([blob], `${titlePrefix ?? 'll'}-sorted-${Date.now()}.png`));
     } catch (error) {
       console.error(error);
     }
@@ -173,34 +173,22 @@ export function RankingResultsView({
   const exportJSON = async () => {
     await navigator.clipboard.writeText(
       JSON.stringify(
-        order?.flatMap((item, idx) =>
-          item.map((i) => {
-            const userRanking = userRankingData.find((s) => s.userName === `${i}`);
-            const userSongIds = userRanking?.rankings[groupKey] ?? [];
-
-            // Enrich each song ID with title and artist
-            const enrichedSongs = userSongIds.map((songId, idx) => {
-              const song = songData.find((s) => s.id === songId);
-              if (!song) {
-                return { id: songId, title: 'Unknown', artist: 'Unknown' };
-              }
-
-              // Get artist information
-              const artistId = song.artists?.[0]?.id;
-              const artist = artistId ? artistsData.find((a) => a.id === artistId) : undefined;
-              const artistName = artist?.name || 'Unknown';
-
-              return `${idx + 1}. ${song?.name} - ${artistName}`;
-            });
-
-            // TODO: this will need to be updated to handle the original tie behavior where rankings are a 2D array
-            return {
-              rank: idx + 1,
-              userName: userRanking?.userName,
-              ranking: enrichedSongs
-            };
-          })
-        ),
+        // Use the gap-aware `rankings` (same ranks the table shows) so the
+        // exported order matches the on-screen results, ties included.
+        rankings.map((userRanking) => {
+          const userSongIds = userRanking.rankings[groupKey] ?? [];
+          const enrichedSongs = userSongIds.map((songId, idx) => {
+            const song = songData.find((s) => s.id === songId);
+            const artistId = song?.artists?.[0]?.id;
+            const artist = artistId ? artistsData.find((a) => a.id === artistId) : undefined;
+            return `${idx + 1}. ${song?.name ?? 'Unknown'} - ${artist?.name ?? 'Unknown'}`;
+          });
+          return {
+            rank: userRanking.rank,
+            userName: userRanking.userName,
+            ranking: enrichedSongs
+          };
+        }),
         null,
         2
       )
@@ -210,14 +198,7 @@ export function RankingResultsView({
 
   const exportText = async () => {
     await navigator.clipboard.writeText(
-      order
-        ?.flatMap((item, idx) =>
-          item.map((i) => {
-            const s = userRankingData.find((s) => s.userName === `${i}`);
-            return `${idx + 1}. ${s?.userName}`;
-          })
-        )
-        .join('\n') ?? ''
+      rankings.map((userRanking) => `${userRanking.rank}. ${userRanking.userName}`).join('\n')
     );
     toast?.({ description: t('toast.text_copied') });
   };

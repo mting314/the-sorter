@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Stack, Grid } from 'styled-system/jsx';
 import { Text } from '~/components/ui/text';
+import { Button } from '~/components/ui/button';
 import { Metadata } from '~/components/layout/Metadata';
 import { useSongData } from '~/hooks/useSongData';
 import { useUserRankingsData } from '~/hooks/useUserRankingsData';
@@ -12,7 +13,7 @@ import type { GroupKey } from '~/types/user-rankings';
 export function Page() {
   const { t } = useTranslation();
   const songs = useSongData();
-  const { users: userRankings, isLoading, error } = useUserRankingsData();
+  const { users: userRankings, isLoading, error, reload } = useUserRankingsData();
 
   // Calculate stats for each group
   const groupStats = useMemo(() => {
@@ -65,7 +66,12 @@ export function Page() {
         {isLoading ? (
           <Text color="fg.muted">{t('common.loading')}</Text>
         ) : error ? (
-          <Text color="fg.error">{t('common.error')}</Text>
+          <Stack gap={3} alignItems="center">
+            <Text color="fg.error">{t('common.error')}</Text>
+            <Button variant="outline" size="sm" onClick={() => reload()}>
+              {t('common.retry')}
+            </Button>
+          </Stack>
         ) : (
           <Grid gap={4} w="full" maxW="1200px" columns={{ base: 1, md: 2, lg: 3 }}>
             {Object.entries(GROUP_NAMES).map(([key, name]) => {

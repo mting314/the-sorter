@@ -255,7 +255,8 @@
     "no_items": "No items found",
     "no_selection": "No items selected",
     "moveUp": "Move up",
-    "moveDown": "Move down"
+    "moveDown": "Move down",
+    "retry": "Retry"
   },
   "song_rankings": {
     "title": "Song Rankings Comparison",

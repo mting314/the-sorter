@@ -69,7 +69,9 @@ export function Page() {
     listToSort,
     listCount,
     clear,
-    isLoading
+    isLoading,
+    error,
+    reload
   } = useUserRankingsSortData(groupKey, { disableShortcutsRef });
   const [showConfirmDialog, setShowConfirmDialog] = useState<{
     type: 'mid-sort' | 'ended' | 'new-session' | 'preview';
@@ -153,9 +155,18 @@ export function Page() {
             </Switch>
           )}
         </Wrap>
-        <Text fontSize="sm" fontWeight="bold">
-          {isLoading ? t('common.loading') : t('settings.sort_count', { count: listCount })}
-        </Text>
+        {error ? (
+          <Stack gap={2} alignItems="center">
+            <Text color="fg.error">{t('common.error')}</Text>
+            <Button variant="outline" size="sm" onClick={() => reload()}>
+              {t('common.retry')}
+            </Button>
+          </Stack>
+        ) : (
+          <Text fontSize="sm" fontWeight="bold">
+            {isLoading ? t('common.loading') : t('settings.sort_count', { count: listCount })}
+          </Text>
+        )}
         <Button
           size="sm"
           variant="outline"
