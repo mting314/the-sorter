@@ -157,11 +157,15 @@
         "show_info": "情報を表示する",
         "tier_name": "Tier名",
         "start_rank": "ランク",
-        "hide_bottom_tier": "最下位を非表示する"
+        "hide_bottom_tier": "最下位を非表示する",
+        "ranks": "ランク"
       }
     },
     "copy_text": "テキストをコピーする",
-    "export_json": "JSONデータをコピーする"
+    "export_json": "JSONデータをコピーする",
+    "song_rankings": {
+      "copy_text": "結果をテキストでコピー（ユーザー名のみ）"
+    }
   },
   "toast": {
     "url_copied": "URLをコピーしました",
@@ -240,7 +244,16 @@
     "unsavedChanges": "未保存の変更",
     "error": "エラー",
     "edit": "編集",
-    "confirmDelete": "本当によろしいですか？"
+    "confirmDelete": "本当によろしいですか？",
+    "import": "インポート",
+    "close": "閉じる",
+    "new": "新規",
+    "load": "読み込む",
+    "create": "作成",
+    "score": "スコア",
+    "set": "カスタム設定",
+    "moveUp": "上へ移動",
+    "moveDown": "下へ移動"
   },
   "song_rankings": {
     "title": "楽曲ランキング比較",
@@ -249,8 +262,9 @@
     "songs_count": "{{count}}曲",
     "rankings_count": "{{count}}人のランキング",
     "start_sorting": "比較を開始",
-    "comparison_count": "第{{current}}回目 / {{total}}",
-    "your_result": "あなたのランキング結果"
+    "your_result": "あなたのランキング結果",
+    "ranking-username": "ランキングユーザー",
+    "rankings": "ランキング"
   },
   "setlistPrediction": {
     "title": "セットリスト予想",
@@ -329,5 +343,8 @@
     "calculateScore": "スコアを計算",
     "startTyping": "曲名やアーティスト名を入力して検索...",
     "showingResults": "{{count}}件を表示"
-  }
+  },
+  "ranking-ranking-title": "ランキングのランキング",
+  "artist": "アーティスト",
+  "song-name": "タイトル"
 }
