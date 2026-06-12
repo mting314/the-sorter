@@ -56,7 +56,8 @@
     "years": "発売年",
     "cross_series": "複数シリーズ",
     "performances": "公演",
-    "clear_performance": "クリア"
+    "clear_performance": "クリア",
+    "blind_mode": "ブラインドモード（名前を隠す）"
   },
   "heardle": {
     "guess_both_songs": "両方の曲を当ててからランキングできます",

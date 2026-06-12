@@ -60,7 +60,8 @@
     "years": "Years",
     "cross_series": "Multiple Series",
     "performances": "Performances",
-    "clear_performance": "Clear"
+    "clear_performance": "Clear",
+    "blind_mode": "Blind Mode (Hide Names)"
   },
   "heardle": {
     "guess_both_songs": "Guess both songs to enable ranking",

@@ -16,6 +16,9 @@ export interface UserRankingCardProps extends StackProps {
   /** Ref + handler for the inner scrollable list, used to sync scrolling between cards. */
   scrollRef?: Ref<HTMLDivElement>;
   onScroll?: UIEventHandler<HTMLDivElement>;
+  /** Hide the user's name (blind mode); shows `placeholderName` instead. */
+  hideName?: boolean;
+  placeholderName?: string;
 }
 
 export function UserRankingCard({
@@ -25,6 +28,8 @@ export function UserRankingCard({
   groupKey,
   scrollRef,
   onScroll,
+  hideName = false,
+  placeholderName = '???',
   ...rest
 }: UserRankingCardProps) {
   // Get song data from locally
@@ -48,7 +53,7 @@ export function UserRankingCard({
       <HStack gap={3} borderBottomWidth="1px" borderBottomColor="border.muted" pb={2}>
         {/* <Avatar src={user.profilePicture} name={user.userName} size="md" /> */}
         <Text fontSize="lg" fontWeight="bold">
-          {userName}
+          {hideName ? placeholderName : userName}
         </Text>
       </HStack>
 

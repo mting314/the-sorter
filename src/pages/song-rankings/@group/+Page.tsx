@@ -53,6 +53,8 @@ export function Page() {
   const {
     noTieMode,
     setNoTieMode,
+    blindMode,
+    setBlindMode,
     init,
     left,
     right,
@@ -117,8 +119,12 @@ export function Page() {
           {title}
         </Text>
         <Text textAlign="center">{t('description')}</Text>
-        {!isSorting && (
-          <Wrap>
+        <Wrap>
+          {/* Blind mode is cosmetic, so it can be toggled before or during sorting. */}
+          <Switch checked={blindMode} onCheckedChange={(e) => setBlindMode(e.checked)}>
+            {t('settings.blind_mode')}
+          </Switch>
+          {!isSorting && (
             <Switch
               checked={noTieMode}
               disabled={isSorting}
@@ -126,8 +132,8 @@ export function Page() {
             >
               {t('settings.no_tie_mode')}
             </Switch>
-          </Wrap>
-        )}
+          )}
+        </Wrap>
         <Text fontSize="sm" fontWeight="bold">
           {isLoading ? t('common.loading') : t('settings.sort_count', { count: listCount })}
         </Text>
@@ -175,6 +181,8 @@ export function Page() {
                           comparedRanking={currentRight}
                           scrollRef={aRef}
                           onScroll={onScrollA}
+                          hideName={blindMode}
+                          placeholderName="A"
                           flex={1}
                         />
                         <Box hideBelow="sm">
@@ -191,6 +199,8 @@ export function Page() {
                           comparedRanking={currentLeft}
                           scrollRef={bRef}
                           onScroll={onScrollB}
+                          hideName={blindMode}
+                          placeholderName="B"
                           flex={1}
                         />
                         <Box hideBelow="sm">
