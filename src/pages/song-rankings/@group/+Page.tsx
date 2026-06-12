@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../../components/ui/button';
 import { Kbd } from '../../../components/ui/kbd';
@@ -50,6 +50,8 @@ export function Page() {
 
   const pageContext = usePageContext();
   const groupKey = (pageContext.routeParams as { group: GroupKey }).group;
+  // Pause keyboard shortcuts while a dialog is open (kept in sync below).
+  const disableShortcutsRef = useRef(false);
   const {
     noTieMode,
     setNoTieMode,
@@ -68,11 +70,14 @@ export function Page() {
     listCount,
     clear,
     isLoading
-  } = useUserRankingsSortData(groupKey);
+  } = useUserRankingsSortData(groupKey, { disableShortcutsRef });
   const [showConfirmDialog, setShowConfirmDialog] = useState<{
     type: 'mid-sort' | 'ended' | 'new-session' | 'preview';
     action: 'reset' | 'clear';
   }>();
+  useEffect(() => {
+    disableShortcutsRef.current = !!showConfirmDialog;
+  }, [showConfirmDialog]);
 
   // Sync scrolling between the two comparison ranking lists.
   const { aRef, bRef, onScrollA, onScrollB } = useSyncedScroll<HTMLDivElement>();
@@ -82,6 +87,20 @@ export function Page() {
 
   const currentLeft = leftItem && listToSort.find((l) => l.userName === leftItem[0]);
   const currentRight = rightItem && listToSort.find((l) => l.userName === rightItem[0]);
+
+  // Recover from a stale saved session: if the persisted sort references users
+  // that are no longer in the dataset (renamed/removed), the comparison cards
+  // can't resolve and the sort gets stuck. Clear it so the user can restart.
+  useEffect(() => {
+    if (isLoading || !state || state.status === 'end' || listToSort.length === 0) return;
+    const current = getCurrentItem(state);
+    if (!current) return;
+    const names = new Set(listToSort.map((u) => u.userName));
+    const referenced = [...(current.left ?? []), ...(current.right ?? [])];
+    if (referenced.length > 0 && referenced.some((n) => !names.has(n))) {
+      clear();
+    }
+  }, [isLoading, state, listToSort, clear]);
 
   // Full title = group you're ranking + ranking title
   const titlePrefix = GROUP_NAMES[groupKey];

@@ -4,7 +4,10 @@ import { useUserRankingsData } from './useUserRankingsData';
 import type { GroupKey, UserRanking } from '~/types/user-rankings';
 import { useLocalStorage } from './useLocalStorage';
 
-export const useUserRankingsSortData = (group: GroupKey) => {
+export const useUserRankingsSortData = (
+  group: GroupKey,
+  options?: { disableShortcutsRef?: { current: boolean } }
+) => {
   const { users: allUserRankings, isLoading, error } = useUserRankingsData();
   const [noTieMode, setNoTieMode] = useLocalStorage(`dd-mode-${group}`, false);
   const [blindMode, setBlindMode] = useLocalStorage(`blind-mode-${group}`, false);
@@ -26,11 +29,14 @@ export const useUserRankingsSortData = (group: GroupKey) => {
 
   // Keyboard shortcuts: ←/→ pick, ↓ tie, ↑ undo (mirrors the song sorters).
   const { state, left, right, tie, undo } = sorterHook;
+  const disableShortcutsRef = options?.disableShortcutsRef;
   useEffect(() => {
     const handleKeystroke = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       if (!state || state.status === 'end') return;
+      // Don't act while a dialog (confirm/preview) is open.
+      if (disableShortcutsRef?.current) return;
       switch (e.key) {
         case 'ArrowUp':
           undo();
@@ -45,14 +51,15 @@ export const useUserRankingsSortData = (group: GroupKey) => {
           e.preventDefault();
           break;
         case 'ArrowDown':
-          if (!noTieMode) tie();
+          if (noTieMode) break; // tie disabled — let the key through (e.g. page scroll)
+          tie();
           e.preventDefault();
           break;
       }
     };
     document.addEventListener('keydown', handleKeystroke);
     return () => document.removeEventListener('keydown', handleKeystroke);
-  }, [state, left, right, tie, undo, noTieMode]);
+  }, [state, left, right, tie, undo, noTieMode, disableShortcutsRef]);
 
   return {
     ...sorterHook,

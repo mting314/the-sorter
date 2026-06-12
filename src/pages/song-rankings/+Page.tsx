@@ -37,6 +37,9 @@ export function Page() {
     userRankings.forEach((user) => {
       Object.entries(user.rankings).forEach(([key, ranking]) => {
         const groupKey = key as GroupKey;
+        // Ignore any group keys the frontend doesn't know about (data is fetched
+        // from an overridable source and may contain newer/unexpected groups).
+        if (!stats[groupKey]) return;
         if (ranking && ranking.length > 0) {
           stats[groupKey].rankingCount += 1;
         }
