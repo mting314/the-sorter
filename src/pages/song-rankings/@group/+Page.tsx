@@ -140,21 +140,17 @@ export function Page() {
           {title}
         </Text>
         <Text textAlign="center">{t('description')}</Text>
-        <Wrap>
-          {/* Blind mode is cosmetic, so it can be toggled before or during sorting. */}
-          <Switch checked={blindMode} onCheckedChange={(e) => setBlindMode(e.checked)}>
-            {t('settings.blind_mode')}
-          </Switch>
-          {!isSorting && (
-            <Switch
-              checked={noTieMode}
-              disabled={isSorting}
-              onCheckedChange={(e) => setNoTieMode(e.checked)}
-            >
+        {/* Settings can only be changed before sorting starts. */}
+        {!isSorting && (
+          <Wrap>
+            <Switch checked={blindMode} onCheckedChange={(e) => setBlindMode(e.checked)}>
+              {t('settings.blind_mode')}
+            </Switch>
+            <Switch checked={noTieMode} onCheckedChange={(e) => setNoTieMode(e.checked)}>
               {t('settings.no_tie_mode')}
             </Switch>
-          )}
-        </Wrap>
+          </Wrap>
+        )}
         {error ? (
           <Stack gap={2} alignItems="center">
             <Text color="fg.error">{t('common.error')}</Text>
