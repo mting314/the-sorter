@@ -5,7 +5,7 @@ import type { GroupKey, UserRanking } from '~/types/user-rankings';
 import { useLocalStorage } from './useLocalStorage';
 
 export const useUserRankingsSortData = (group: GroupKey) => {
-  const allUserRankings = useUserRankingsData();
+  const { users: allUserRankings, isLoading, error } = useUserRankingsData();
   const [noTieMode, setNoTieMode] = useLocalStorage(`dd-mode-${group}`, false);
   const [showDiffsMode, setShowDiffsMode] = useLocalStorage(`show-diffs-mode-${group}`, false);
 
@@ -31,6 +31,8 @@ export const useUserRankingsSortData = (group: GroupKey) => {
     showDiffsMode: showDiffsMode ?? false,
     setShowDiffsMode,
     listToSort,
-    listCount: listToSort.length
+    listCount: listToSort.length,
+    isLoading,
+    error
   };
 };

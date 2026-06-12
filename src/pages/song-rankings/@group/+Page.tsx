@@ -65,7 +65,8 @@ export function Page() {
     isEnded,
     listToSort,
     listCount,
-    clear
+    clear,
+    isLoading
   } = useUserRankingsSortData(groupKey);
   const [showConfirmDialog, setShowConfirmDialog] = useState<{
     type: 'mid-sort' | 'ended' | 'new-session' | 'preview';
@@ -133,7 +134,7 @@ export function Page() {
           </Wrap>
         </>
         <Text fontSize="sm" fontWeight="bold">
-          {t('settings.sort_count', { count: listCount })}
+          {isLoading ? t('common.loading') : t('settings.sort_count', { count: listCount })}
         </Text>
         <Button
           size="sm"

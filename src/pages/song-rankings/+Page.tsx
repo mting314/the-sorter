@@ -12,7 +12,7 @@ import type { GroupKey } from '~/types/user-rankings';
 export function Page() {
   const { t } = useTranslation();
   const songs = useSongData();
-  const userRankings = useUserRankingsData();
+  const { users: userRankings, isLoading, error } = useUserRankingsData();
 
   // Calculate stats for each group
   const groupStats = useMemo(() => {
@@ -59,22 +59,28 @@ export function Page() {
           </Text>
         </Stack>
 
-        <Grid gap={4} w="full" maxW="1200px" columns={{ base: 1, md: 2, lg: 3 }}>
-          {Object.entries(GROUP_NAMES).map(([key, name]) => {
-            const groupKey = key as GroupKey;
-            const stats = groupStats[groupKey];
+        {isLoading ? (
+          <Text color="fg.muted">{t('common.loading')}</Text>
+        ) : error ? (
+          <Text color="fg.error">{t('common.error')}</Text>
+        ) : (
+          <Grid gap={4} w="full" maxW="1200px" columns={{ base: 1, md: 2, lg: 3 }}>
+            {Object.entries(GROUP_NAMES).map(([key, name]) => {
+              const groupKey = key as GroupKey;
+              const stats = groupStats[groupKey];
 
-            return (
-              <GroupCard
-                key={key}
-                groupKey={groupKey}
-                groupName={name}
-                songCount={stats.songCount}
-                rankingCount={stats.rankingCount}
-              />
-            );
-          })}
-        </Grid>
+              return (
+                <GroupCard
+                  key={key}
+                  groupKey={groupKey}
+                  groupName={name}
+                  songCount={stats.songCount}
+                  rankingCount={stats.rankingCount}
+                />
+              );
+            })}
+          </Grid>
+        )}
       </Stack>
     </>
   );
