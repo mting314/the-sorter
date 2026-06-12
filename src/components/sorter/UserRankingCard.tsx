@@ -5,6 +5,7 @@ import type { GroupKey, UserRanking } from '~/types/user-rankings';
 import { RankingSongItem } from '../song-rankings/RankingSongItem';
 import { calculatePositionDiff } from '~/utils/ranking-diff';
 import type { StackProps } from 'styled-system/jsx';
+import type { Ref, UIEventHandler } from 'react';
 import { useSongData } from '~/hooks/useSongData';
 
 export interface UserRankingCardProps extends StackProps {
@@ -12,6 +13,9 @@ export interface UserRankingCardProps extends StackProps {
   showDiffs?: boolean;
   comparedRanking?: UserRanking;
   groupKey: GroupKey; // need to pass in group key to get the right rankings list
+  /** Ref + handler for the inner scrollable list, used to sync scrolling between cards. */
+  scrollRef?: Ref<HTMLDivElement>;
+  onScroll?: UIEventHandler<HTMLDivElement>;
 }
 
 export function UserRankingCard({
@@ -19,6 +23,8 @@ export function UserRankingCard({
   showDiffs = false,
   comparedRanking,
   groupKey,
+  scrollRef,
+  onScroll,
   ...rest
 }: UserRankingCardProps) {
   // Get song data from locally
@@ -48,6 +54,8 @@ export function UserRankingCard({
 
       {/* Ranking List */}
       <Stack
+        ref={scrollRef}
+        onScroll={onScroll}
         gap={0}
         borderColor="border.subtle"
         rounded="md"

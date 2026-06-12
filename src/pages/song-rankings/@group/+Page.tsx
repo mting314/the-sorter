@@ -9,6 +9,7 @@ import { getCurrentItem } from '../../../utils/sort';
 import { Metadata } from '~/components/layout/Metadata';
 import { Box, HStack, Stack, Wrap } from 'styled-system/jsx';
 import { useUserRankingsSortData } from '~/hooks/useUserRankingsSortData';
+import { useSyncedScroll } from '~/hooks/useSyncedScroll';
 import { UserRankingCard } from '~/components/sorter/UserRankingCard';
 import { usePageContext } from 'vike-react/usePageContext';
 import { GroupKey, UserRanking } from '~/types/user-rankings';
@@ -70,6 +71,9 @@ export function Page() {
     type: 'mid-sort' | 'ended' | 'new-session' | 'preview';
     action: 'reset' | 'clear';
   }>();
+
+  // Sync scrolling between the two comparison ranking lists.
+  const { aRef, bRef, onScrollA, onScrollB } = useSyncedScroll<HTMLDivElement>();
 
   const { left: leftItem, right: rightItem } =
     (state && getCurrentItem(state)) || ({} as { left: string[]; right: string[] });
@@ -169,6 +173,8 @@ export function Page() {
                           // Always show the difference in position of songs between left and right rankings
                           showDiffs
                           comparedRanking={currentRight}
+                          scrollRef={aRef}
+                          onScroll={onScrollA}
                           flex={1}
                         />
                         <Box hideBelow="sm">
@@ -183,6 +189,8 @@ export function Page() {
                           // Always show the difference in position of songs between left and right rankings
                           showDiffs
                           comparedRanking={currentLeft}
+                          scrollRef={bRef}
+                          onScroll={onScrollB}
                           flex={1}
                         />
                         <Box hideBelow="sm">
