@@ -52,8 +52,6 @@ export function Page() {
   const {
     noTieMode,
     setNoTieMode,
-    showDiffsMode,
-    setShowDiffsMode,
     init,
     left,
     right,
@@ -115,24 +113,17 @@ export function Page() {
           {title}
         </Text>
         <Text textAlign="center">{t('description')}</Text>
-        <>
+        {!isSorting && (
           <Wrap>
             <Switch
-              checked={showDiffsMode}
-              onCheckedChange={(e) => setShowDiffsMode(e.checked)}
-            ></Switch>
-            {t('settings.show_ranking_diffs_mode')}
-            {!isSorting && (
-              <Switch
-                checked={noTieMode}
-                disabled={isSorting}
-                onCheckedChange={(e) => setNoTieMode(e.checked)}
-              >
-                {t('settings.no_tie_mode')}
-              </Switch>
-            )}
+              checked={noTieMode}
+              disabled={isSorting}
+              onCheckedChange={(e) => setNoTieMode(e.checked)}
+            >
+              {t('settings.no_tie_mode')}
+            </Switch>
           </Wrap>
-        </>
+        )}
         <Text fontSize="sm" fontWeight="bold">
           {isLoading ? t('common.loading') : t('settings.sort_count', { count: listCount })}
         </Text>
@@ -175,8 +166,8 @@ export function Page() {
                           onClick={() => left()}
                           ranking={currentLeft}
                           groupKey={groupKey}
-                          // These control showing the difference in position of songs between left and right rankings
-                          showDiffs={showDiffsMode}
+                          // Always show the difference in position of songs between left and right rankings
+                          showDiffs
                           comparedRanking={currentRight}
                           flex={1}
                         />
@@ -189,8 +180,8 @@ export function Page() {
                           onClick={() => right()}
                           ranking={currentRight}
                           groupKey={groupKey}
-                          // These control showing the difference in position of songs between left and right rankings
-                          showDiffs={showDiffsMode}
+                          // Always show the difference in position of songs between left and right rankings
+                          showDiffs
                           comparedRanking={currentLeft}
                           flex={1}
                         />
