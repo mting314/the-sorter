@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSorter } from './useSorter';
 import { useUserRankingsData } from './useUserRankingsData';
 import type { GroupKey, UserRanking } from '~/types/user-rankings';
@@ -22,6 +22,36 @@ export const useUserRankingsSortData = (group: GroupKey) => {
     listToSort.map((u) => u.userName),
     `ranking-rankings-${group}` // Unique localStorage key per group
   );
+
+  // Keyboard shortcuts: ←/→ pick, ↓ tie, ↑ undo (mirrors the song sorters).
+  const { state, left, right, tie, undo } = sorterHook;
+  useEffect(() => {
+    const handleKeystroke = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (!state || state.status === 'end') return;
+      switch (e.key) {
+        case 'ArrowUp':
+          undo();
+          e.preventDefault();
+          break;
+        case 'ArrowLeft':
+          left();
+          e.preventDefault();
+          break;
+        case 'ArrowRight':
+          right();
+          e.preventDefault();
+          break;
+        case 'ArrowDown':
+          if (!noTieMode) tie();
+          e.preventDefault();
+          break;
+      }
+    };
+    document.addEventListener('keydown', handleKeystroke);
+    return () => document.removeEventListener('keydown', handleKeystroke);
+  }, [state, left, right, tie, undo, noTieMode]);
 
   return {
     ...sorterHook,
