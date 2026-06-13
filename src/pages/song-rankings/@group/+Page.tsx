@@ -99,7 +99,7 @@ export function Page() {
     if (!current) return;
     const names = new Set(listToSort.map((u) => u.userName));
     const referenced = [...(current.left ?? []), ...(current.right ?? [])];
-    if (referenced.length > 0 && referenced.some((n) => !names.has(n))) {
+    if (referenced.some((n) => !names.has(n))) {
       clear();
     }
   }, [isLoading, state, listToSort, clear]);

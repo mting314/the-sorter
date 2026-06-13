@@ -62,17 +62,18 @@ export const useUserRankingsData = (): UseUserRankingsDataResult => {
     let active = true;
     setIsLoading(true);
     setError(null);
-    loadUserRankings()
-      .then((data) => {
+    void (async () => {
+      try {
+        const data = await loadUserRankings();
         if (!active) return;
         setUsers(data);
         setIsLoading(false);
-      })
-      .catch((err: unknown) => {
+      } catch (err: unknown) {
         if (!active) return;
         setError(err instanceof Error ? err : new Error(String(err)));
         setIsLoading(false);
-      });
+      }
+    })();
     return () => {
       active = false;
     };
