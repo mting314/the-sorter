@@ -14,7 +14,49 @@
     "characters": "キャラ",
     "hasu-music": "蓮ノ空",
     "songs": "楽曲",
-    "setlist-prediction": "セトリ予想"
+    "setlist-prediction": "セトリ予想",
+    "mypick": "MyPick"
+  },
+  "mypick": {
+    "title": "ライブのMyPick",
+    "description": "ライブごとに、各ユニットのお気に入り楽曲を選んで賞を贈ろう。",
+    "choose_live": "ライブを選ぶ",
+    "change_live": "ライブを変更",
+    "no_live_selected": "ライブが未選択です。",
+    "no_live_hint": "ライブを選んでお気に入りの楽曲を選び、賞を贈りましょう。",
+    "song_count_one": "{{ count }}曲",
+    "song_count_other": "{{ count }}曲",
+    "awards": {
+      "section": "アワード",
+      "best_song": "ベストソング",
+      "most_surprised": "一番の驚き",
+      "cried_most": "一番泣いた",
+      "best_costume": "ベスト衣装",
+      "best_performance": "ベストパフォーマンス"
+    },
+    "units": {
+      "section": "ユニット別ベストソング",
+      "kind_group": "グループ",
+      "kind_unit": "ユニット",
+      "kind_solo": "ソロ"
+    },
+    "pick_song": "楽曲を選ぶ",
+    "pick_costume": "衣装を選ぶ",
+    "pick_song_for": "{{ name }}の楽曲を選ぶ",
+    "empty_pick": "タップして選択",
+    "clear_pick": "クリア",
+    "costume_fallback_hint": "このライブの衣装データがありません。衣装が好きだった楽曲を選んでください。",
+    "add_award": "アワードを追加",
+    "add_award_placeholder": "アワード名（例：ベストMC）",
+    "remove_award": "アワードを削除",
+    "reset": "選択をリセット",
+    "reset_confirm": "このライブの選択をすべてクリアしますか？",
+    "share_url": "共有リンク",
+    "download_image": "画像を保存",
+    "shared_view": "共有されたMyPickを表示しています。",
+    "make_own": "自分で作る",
+    "share_text": "このライブのMyPickをチェック！",
+    "no_songs": "このライブには表示できる楽曲がありません。"
   },
   "settings": {
     "sort_count": "{{ count }}人をランキングする",

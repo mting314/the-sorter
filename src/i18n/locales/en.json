@@ -16,7 +16,49 @@
     "characters": "Characters",
     "hasu-music": "Hasunosora",
     "songs": "Songs",
-    "setlist-prediction": "Setlist Prediction"
+    "setlist-prediction": "Setlist Prediction",
+    "mypick": "MyPick"
+  },
+  "mypick": {
+    "title": "MyPick for a Live",
+    "description": "Pick your favourite song from each unit and hand out awards for one live.",
+    "choose_live": "Choose Live",
+    "change_live": "Change Live",
+    "no_live_selected": "No live selected yet.",
+    "no_live_hint": "Choose a live to pick your favourite songs and hand out awards.",
+    "song_count_one": "{{ count }} song",
+    "song_count_other": "{{ count }} songs",
+    "awards": {
+      "section": "Awards",
+      "best_song": "Best Song",
+      "most_surprised": "Most Surprised",
+      "cried_most": "Cried the Most",
+      "best_costume": "Best Costume",
+      "best_performance": "Best Performance"
+    },
+    "units": {
+      "section": "Best Song per Unit",
+      "kind_group": "Group",
+      "kind_unit": "Unit",
+      "kind_solo": "Solo"
+    },
+    "pick_song": "Pick a song",
+    "pick_costume": "Pick a costume",
+    "pick_song_for": "Pick a song for {{ name }}",
+    "empty_pick": "Tap to pick",
+    "clear_pick": "Clear",
+    "costume_fallback_hint": "No costume data for this live — pick the song whose costume you loved.",
+    "add_award": "Add Award",
+    "add_award_placeholder": "Award name (e.g. Best MC)",
+    "remove_award": "Remove award",
+    "reset": "Reset Picks",
+    "reset_confirm": "Clear all picks for this live?",
+    "share_url": "Share Link",
+    "download_image": "Download Image",
+    "shared_view": "You're viewing a shared MyPick.",
+    "make_own": "Make your own",
+    "share_text": "Check out my MyPick for this live!",
+    "no_songs": "This live has no resolvable songs."
   },
   "settings": {
     "sort_count": "{{ count }} to be sorted",
