@@ -6,6 +6,7 @@
   "seiyuu": "Seiyuu",
   "character": "Character",
   "ranking": "Ranking No.",
+  "ranking-ranking-title": "Rankings Ranking",
   "save": "Save",
   "cancel": "Cancel",
   "hasu-songs": "Hasu no Sora Songs",
@@ -16,7 +17,8 @@
     "characters": "Characters",
     "hasu-music": "Hasunosora",
     "songs": "Songs",
-    "setlist-prediction": "Setlist Prediction"
+    "setlist-prediction": "Setlist Prediction",
+    "song-rankings": "Song Rankings"
   },
   "settings": {
     "sort_count": "{{ count }} to be sorted",
@@ -58,7 +60,8 @@
     "years": "Years",
     "cross_series": "Multiple Series",
     "performances": "Performances",
-    "clear_performance": "Clear"
+    "clear_performance": "Clear",
+    "blind_mode": "Blind Mode (Hide Names)"
   },
   "heardle": {
     "guess_both_songs": "Guess both songs to enable ranking",
@@ -145,6 +148,9 @@
         "title": "My #HasuSongsRanking",
         "footer": "Go make your own!\n#LoveLiveRanking"
       }
+    },
+    "song_rankings": {
+      "copy_text": "Copy results as Text (User Names only)"
     },
     "share_x": "Post on X",
     "copy_results": "Copy Results",
@@ -250,7 +256,19 @@
     "no_items": "No items found",
     "no_selection": "No items selected",
     "moveUp": "Move up",
-    "moveDown": "Move down"
+    "moveDown": "Move down",
+    "retry": "Retry"
+  },
+  "song_rankings": {
+    "title": "Song Rankings Comparison",
+    "select_group": "Select a Group",
+    "description": "Compare and rank user song rankings",
+    "songs_count": "{{count}} songs",
+    "rankings_count": "{{count}} user rankings",
+    "start_sorting": "Start Comparing",
+    "your_result": "Your Ranking of User Rankings",
+    "ranking-username": "Ranking User",
+    "rankings": "Rankings"
   },
   "setlistPrediction": {
     "title": "Setlist Prediction",

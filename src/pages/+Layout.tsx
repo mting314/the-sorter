@@ -62,6 +62,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         >
           {t(`navigation.setlist-prediction`)}
         </Link>
+        <Link
+          href={join(import.meta.env.BASE_URL, '/song-rankings')}
+          data-active={
+            currentPath.startsWith(join(import.meta.env.BASE_URL, '/song-rankings'))
+              ? true
+              : undefined
+          }
+          onClick={() => setIsDrawerOpen(false)}
+          _active={{ fontWeight: 'bold' }}
+        >
+          {t(`navigation.song-rankings`)}
+        </Link>
       </>
     );
   }

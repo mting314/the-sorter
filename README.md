@@ -48,6 +48,23 @@ Sort your favorite seiyuu, characters inspired by charasort and more...
   - Hasu: https://www.lovelive-anime.jp/hasunosora/member/
   - Other Cast: Artist Picture/ random pic on Twitter
 
+## User Rankings Data Source (Ranking Rankings)
+
+The "ranking rankings" feature (`/song-rankings`) loads its user-submitted rankings
+over the network at runtime instead of bundling them into the JS, so the data can be
+updated independently of the app code.
+
+- The data lives at `public/data/user-song-rankings.json` and is served as a static
+  asset from the same origin: `${BASE_URL}data/user-song-rankings.json`
+  (e.g. `https://<user>.github.io/the-sorter/data/user-song-rankings.json`).
+- To point the frontend at a different hosted location (any CORS-enabled URL — a CDN,
+  or `https://raw.githubusercontent.com/<owner>/the-sorter/<branch>/public/data/user-song-rankings.json`
+  for updates without a full Pages redeploy), set the build-time env var
+  `PUBLIC_ENV__RANKINGS_URL` (see `.env.example`). When unset, it falls back to the
+  same-origin asset above.
+- The fetch is cached at the module level (fetched once per session) and shared across
+  the landing page and every group's sort view.
+
 ## Automated Data Update
 
 This repository has a scheduled workflow at `.github/workflows/update-data.yml` that:

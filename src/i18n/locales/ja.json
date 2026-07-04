@@ -14,7 +14,8 @@
     "characters": "キャラ",
     "hasu-music": "蓮ノ空",
     "songs": "楽曲",
-    "setlist-prediction": "セトリ予想"
+    "setlist-prediction": "セトリ予想",
+    "song-rankings": "ランキング比較"
   },
   "settings": {
     "sort_count": "{{ count }}人をランキングする",
@@ -56,7 +57,8 @@
     "years": "発売年",
     "cross_series": "複数シリーズ",
     "performances": "公演",
-    "clear_performance": "クリア"
+    "clear_performance": "クリア",
+    "blind_mode": "ブラインドモード（名前を隠す）"
   },
   "heardle": {
     "guess_both_songs": "両方の曲を当ててからランキングできます",
@@ -156,11 +158,15 @@
         "show_info": "情報を表示する",
         "tier_name": "Tier名",
         "start_rank": "ランク",
-        "hide_bottom_tier": "最下位を非表示する"
+        "hide_bottom_tier": "最下位を非表示する",
+        "ranks": "ランク"
       }
     },
     "copy_text": "テキストをコピーする",
-    "export_json": "JSONデータをコピーする"
+    "export_json": "JSONデータをコピーする",
+    "song_rankings": {
+      "copy_text": "結果をテキストでコピー（ユーザー名のみ）"
+    }
   },
   "toast": {
     "url_copied": "URLをコピーしました",
@@ -239,7 +245,28 @@
     "unsavedChanges": "未保存の変更",
     "error": "エラー",
     "edit": "編集",
-    "confirmDelete": "本当によろしいですか？"
+    "confirmDelete": "本当によろしいですか？",
+    "import": "インポート",
+    "close": "閉じる",
+    "new": "新規",
+    "load": "読み込む",
+    "create": "作成",
+    "score": "スコア",
+    "set": "カスタム設定",
+    "moveUp": "上へ移動",
+    "moveDown": "下へ移動",
+    "retry": "再試行"
+  },
+  "song_rankings": {
+    "title": "楽曲ランキング比較",
+    "select_group": "グループを選択",
+    "description": "ユーザーの楽曲ランキングを比較してランク付け",
+    "songs_count": "{{count}}曲",
+    "rankings_count": "{{count}}人のランキング",
+    "start_sorting": "比較を開始",
+    "your_result": "あなたのランキング結果",
+    "ranking-username": "ランキングユーザー",
+    "rankings": "ランキング"
   },
   "setlistPrediction": {
     "title": "セットリスト予想",
@@ -318,5 +345,8 @@
     "calculateScore": "スコアを計算",
     "startTyping": "曲名やアーティスト名を入力して検索...",
     "showingResults": "{{count}}件を表示"
-  }
+  },
+  "ranking-ranking-title": "ランキングのランキング",
+  "artist": "アーティスト",
+  "song-name": "タイトル"
 }

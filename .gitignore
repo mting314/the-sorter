@@ -40,3 +40,5 @@ coverage*
 .env
 
 dogfood-output
+# Raw Discord archive exports (ranking data source)
+_r_LoveLive*
